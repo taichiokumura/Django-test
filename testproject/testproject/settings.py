@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webapp.apps.WebappConfig'  # 追加
+    'webapp.apps.WebappConfig',
+    'widget_tweaks',  # 追加
 ]
 
 MIDDLEWARE = [

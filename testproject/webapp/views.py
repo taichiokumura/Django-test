@@ -11,7 +11,7 @@ from .models import Document
 
 def index(request):
     params = {
-        'title': '画像のアップロード',
+        'title': 'カードを作る',
         'upload_form': DocumentForm(),
         'id': None,
     }
@@ -24,22 +24,11 @@ def index(request):
 
             # アップロードが成功したら、次の画面にリダイレクト
             return redirect('webtestapp:preview', image_id=upload_image.id)
- 
+        else:
+            # フォームが無効な場合、エラーを出力
+            print(form.errors)
+            
     return render(request, 'webtestapp/index.html', params)
-
-
-
-# def preview(request, image_id=0):
- 
-#     upload_image = get_object_or_404(Document, id=image_id)
- 
-#     params = {
-#         'title': '画像の表示',
-#         'id': upload_image.id,
-#         'url': upload_image.photo.url
-#     }
- 
-#     return render(request, 'webtestapp/preview.html', params)
 
 from PIL import Image
 from io import BytesIO
@@ -52,15 +41,27 @@ def preview(request, image_id=0):
     image_path = upload_image.photo.path
     print(f"Debug: Image Path - {image_path}")
 
-    # Pillowを使用して画像を読み込む
-    img = Image.open(image_path)
+    # # Pillowを使用して画像を読み込む
+    # img = Image.open(image_path)
     
-    # 画像を白黒に変換
-    gray_img = img.convert('L')
+    # # 画像を白黒に変換SS
+    # gray_img = img.convert('L')
 
-    # 白黒画像を保存
+    # # 白黒画像を保存
+    # bw_image_path = os.path.join(settings.MEDIA_ROOT, 'result_images', 'bw_image.jpg')
+    # gray_img.save(bw_image_path)
+    
+    # bw_url = os.path.join(settings.MEDIA_URL, 'result_images', 'bw_image.jpg')
+
+    # 使用する画像処理ライブラリをPillowからOpenCVに変更
+    img = cv2.imread(image_path)
+
+    # 画像をグレースケールに変換
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # OpenCVでグレースケール画像を保存
     bw_image_path = os.path.join(settings.MEDIA_ROOT, 'result_images', 'bw_image.jpg')
-    gray_img.save(bw_image_path)
+    cv2.imwrite(bw_image_path, gray_img)
     
     bw_url = os.path.join(settings.MEDIA_URL, 'result_images', 'bw_image.jpg')
 
