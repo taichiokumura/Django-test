@@ -1,15 +1,27 @@
 body {
+<<<<<<< HEAD
     background-color: #aaa;
+=======
+    
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
 }
 
 header {
     width: 100%;
+<<<<<<< HEAD
     margin-top: 50px;
     margin-bottom: 50px;
 }
 
 h1 {
     color: black;
+=======
+    height: auto;
+}
+
+h1 {
+    color: greenyellow;
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
     font-family: 'Mochiy Pop P One', sans-serif;
     margin: 0 auto;
     width: 1000px;
@@ -18,15 +30,20 @@ h1 {
 
 /* upload form */
 #uploadForm {
+<<<<<<< HEAD
     width: 60%;
     height: 100px;
     margin: 0 auto;
+=======
+    text-align: center;
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
 }
 
 #uploadForm input[type="file"] {
     display: none;
 }
 
+<<<<<<< HEAD
 #imageUploadForm {
     
 }
@@ -38,36 +55,59 @@ h1 {
     justify-content: space-between;
 }
 
+=======
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
 .file_label {
     display: block;
     font-size: 16px;
     line-height: 1.5;
     text-align: center;
+<<<<<<< HEAD
     width: 100%;
     padding: 20px 20px;
     color: #fff;
     cursor: pointer;
     transition: opacity 0.3s ease;
     margin-left: 10%;
+=======
+    width: min(100%, 200px);
+    padding: 1.5em 0.5em;
+    margin-inline: auto;
+    color: #fff;
+    background-color: #ffa620;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
 }
 
 .file__label:hover {
     opacity: 0.7;
 }
 
+<<<<<<< HEAD
 #uploadForm .right-wrap {
     padding: 0px 40px;
     margin-right: 5%;
 }
 
+=======
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
 .button_label {
     display: block;
     font-size: 16px;
     line-height: 1.5;
     text-align: center;
+<<<<<<< HEAD
     width: 100%;
     padding: 20px 20px;
     color: #fff;
+=======
+    width: min(100%, 200px);
+    padding: 1.5em 0.5em;
+    margin-inline: auto;
+    color: #fff;
+    background-color: red;
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
     cursor: pointer;
     transition: opacity 0.3s ease;
 }
@@ -76,6 +116,7 @@ h1 {
     display: none;
 }
 
+<<<<<<< HEAD
 /* カード */
 .card {
     width: 100%;
@@ -144,6 +185,8 @@ textarea {
     height: 50%;
 }
 
+=======
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
 /* static/css/modal.css */
 .modal {
     display: none;
