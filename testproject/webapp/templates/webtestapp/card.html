@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>ホーム画面</title>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
+    
+  </head>
+  <body>
+    <h1>作成したカード</h1>
+
+    <div>
+        <ul>
+            {% for obj in object_list %}
+                <img src="{{ obj.photo.url }}" style="width: 200px; height: 200px;">
+                <li>{{ obj.fish }}</li>
+                <li>{{ obj.explanation }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+  </body>
+</html>
