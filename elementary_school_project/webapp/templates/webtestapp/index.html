@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>テストWebアプリ</title>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
+    
+  </head>
+  <body>
+    <header>
+      <h1>{{ title }}</h1>
+    </header>
+
+    <div id="uploadForm"> 
+      <form action="{% url 'webtestapp:index' %}" method="post" enctype="multipart/form-data" id="imageUploadForm">
+        <div id="imageUpload-wrap">
+          {% csrf_token %}
+          <div>
+            <label class="file_label">
+              ファイルを選択
+              {{ upload_form.photo }} {# フォーム部品を表示 #}
+            </label>
+          </div>
+          
+          <div class="right-wrap">   
+            <label class="button_label">
+              とうこう
+              <input type="button" value="アップロード" id="myBtn">
+            </label>
+          </div>
+        </div>
+
+        <!-- カード -->
+        <div class="card">
+          <!-- 写真表示 -->
+          <div class="card-preview">
+              <div id="preview">
+                <p>写真</p>
+              </div>
+          </div>
+
+          <!-- チェックボックス川魚種類 -->
+          <div class="fish-checkbox">
+            <h3>魚の種類を選ぶ</h3>
+            <div class="radio-wrap">
+              {{ upload_form.fish }}
+            </div>
+          </div>
+
+          <div class="explanation-wrap">
+            <label><h4>説明</h4></label>
+            {{ upload_form.explanation|attr:"id:my-textarea" }}
+            
+          </div>
+
+        </div>
+
+
+      </form>
+    </div>
+
+    <!-- カード内の魚の種類タグつけ -->
+
+    <!-- モーダルウィンドウ -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-close js-modal-close">&times;</div>
+        <h2>確認画面</h2>
+        <div id="modalContent"></div>
+        <div id="imagePreview"></div>
+        <p id="msg"></p>
+        <button onclick="submitForm()">アップロード</button>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
+  </body>
+</html>
