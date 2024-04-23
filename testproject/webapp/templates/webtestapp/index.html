@@ -17,6 +17,10 @@
       <h1>{{ title }}</h1>
     </header>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> b7e9abe71de59f70847cbfb2b8e8aacb965ffab9
     <div id="uploadForm"> 
       <form action="{% url 'webtestapp:index' %}" method="post" enctype="multipart/form-data" id="imageUploadForm">
         <div id="imageUpload-wrap">
@@ -63,6 +67,7 @@
 
 
       </form>
+<<<<<<< HEAD
     </div>
 
     <!-- カード内の魚の種類タグつけ -->
@@ -80,5 +85,68 @@
     </div>
     
     <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
+=======
+    </div>
+
+    <!-- カード内の魚の種類タグつけ -->
+
+    <!-- モーダルウィンドウ -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-close js-modal-close">&times;</div>
+        <h2>確認画面</h2>
+        <div id="modalContent"></div>
+        <div id="imagePreview"></div>
+        <p id="msg"></p>
+        <button onclick="submitForm()">アップロード</button>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
+=======
+    <div>
+        {% if id %}
+        <h2>画像が登録されました</h2>
+        <p>画像のIDは {{ id }} です</p>
+        {% endif %}
+    </div>
+    <div id="uploadForm"> 
+      <form action="{% url 'webtestapp:index' %}" method="post" enctype="multipart/form-data" id="imageUploadForm">
+          {% csrf_token %}
+          <label class="file_label">
+            ファイルを選択
+            {{ upload_form.photo }} {# フォーム部品を表示 #}
+          </label>
+          <label class="button_label">
+            とうこう
+            <input type="button" value="アップロード" id="myBtn">
+          </label>
+      </form>
+
+      <p>
+        プレビュー:<br>
+        <!-- <canvas id="preview" style="max-width:200px;"></canvas> -->
+        <div id="preview"></div>
+      </p>
+    </div>
+
+    <!-- モーダルウィンドウ -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-close js-modal-close">&times;</div>
+        <h2>確認画面</h2>
+        <div id="modalContent"></div>
+        <div id="imagePreview"></div>
+        <button onclick="submitForm()">アップロード</button>
+      </div>
+    </div>
+
+    <div>
+      <img src="{{ bw_url }}" width="400px">
+    </div>
+    
+    <script type="text/javascript" src="static/js/modal.js"></script>
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
+>>>>>>> b7e9abe71de59f70847cbfb2b8e8aacb965ffab9
   </body>
 </html>

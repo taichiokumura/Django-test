@@ -15,7 +15,15 @@ function previewImage(obj) {
         const previewImage = document.getElementById("preview");
         previewImage.src = imageUrl;
 
+<<<<<<< HEAD
         previewImage.innerHTML = "<img src='" + previewImage.src + "' >";
+=======
+<<<<<<< HEAD
+        previewImage.innerHTML = "<img src='" + previewImage.src + "' >";
+=======
+        previewImage.innerHTML = "<img src='" + previewImage.src + "' width='200px'>";
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
+>>>>>>> b7e9abe71de59f70847cbfb2b8e8aacb965ffab9
     };
     fileReader.readAsDataURL(obj.files[0]);
 }
@@ -30,12 +38,22 @@ function ModalOpen() {
 
     // プレビュー画像も表示
     const previewImage = document.getElementById("imagePreview");
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> b7e9abe71de59f70847cbfb2b8e8aacb965ffab9
     previewImage.innerHTML = "<img src='" + document.getElementById("preview").src + "' width='50%' height='50%' >";
 
     //説明表示
     const msg = document.getElementById('msg');
     const MyTextarea = document.getElementById('my-textarea');
     msg.innerText = MyTextarea.value;
+<<<<<<< HEAD
+=======
+=======
+    previewImage.innerHTML = "<img src='" + document.getElementById("preview").src + "' width='200px'>";
+>>>>>>> 6f2315181f90b414accb969b4e12bc7f5c4466ad
+>>>>>>> b7e9abe71de59f70847cbfb2b8e8aacb965ffab9
 
     // モーダルを表示
     document.getElementById("myModal").style.display = "block";
