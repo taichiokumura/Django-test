@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>ホーム画面</title>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
+    
+  </head>
+  <body>
+    <header>
+      <h1>{{ title }}</h1>
+      <ul class="header-ul">
+        <li>アプリの使い方</li>
+        <li>ログイン</li>
+        <li>アカウント作成</li>
+        <li><a href="{% url 'webtestapp:index' %}">カードを作る</a></li>
+        <li><a href="{% url 'webtestapp:card' %}">カードを見る</a></li>
+      </ul>
+    </header>
+  </body>
+</html>
