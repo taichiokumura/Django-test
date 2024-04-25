@@ -9,9 +9,8 @@ import os
 from PIL import Image
 
 from webapp.forms import DocumentForm
-from webapp.models import CardInformation, StudentInformation
-
-from pyzbar.pyzbar import decode
+from webapp.models import CardInformation
+from .login import login_qr_code
 
 def index(request):
     params = {
@@ -26,46 +25,17 @@ def index(request):
             upload_image = form.save()
             params['id'] = upload_image.id
             
-            # 画像からQRコードを読み取る
-            decode_objects = decode(cv2.imread(upload_image.photo.path))
-
-            if decode_objects:
-                # QRコードから読み取った学籍番号
-                decode_student_id = decode_objects[0].data.decode('utf-8')
-
-                try:
-                    # データベースから学籍番号を取得
-                    student = StudentInformation.objects.get(student_id=decode_student_id)
-
-                    # ログインに成功した場合はセッションに保存
-                    request.session['student_id'] = decode_student_id
-                    print(f"ログインに成功しました。学籍番号: {decode_student_id}")
-                    print(f"ログインに成功しました2。学籍番号: {decode_student_id}")
-
-                    # アップロードが成功したら、次の画面にリダイレクト
-                    return redirect('webtestapp:cutout_fish', image_id=upload_image.id)
-                except StudentInformation.DoesNotExist:
-                    params['error_message'] = '学籍番号が正しくありません'
-                    print(params['error_message'])  # ターミナルにエラーメッセージを表示
-            else:
-                params['error_message'] = 'QRコードが見つかりませんでした'
-                print(params['error_message'])  # ターミナルにエラーメッセージを表示
-
-            # # 画像ファイルのパス
-            # image_path = upload_image.photo.path
-
-            # # QR コードを読み取る
-            # data, bbox = read_qr_code(image_path)
-
-            # # QR コードが検出された場合はデータを表示
-            # if data is not None:
-            #     print("QR コードが検出されました:")
-            #     print("データ:", data)
-            # else:
-            #     print("QR コードは見つかりませんでした")
+            error_message = login_qr_code(request, upload_image)
+            # QRコードを使ってログインを試みる
+            if error_message:
+                params['error_message'] = error_message
+                print(error_message)  # ターミナルにエラーメッセージを表示
+                # エラーメッセージを追加した状態で画面を再描画
+                return render(request, 'webtestapp/index.html', params)
 
             # アップロードが成功したら、次の画面にリダイレクト
-            
+            return redirect('webtestapp:cutout_fish', image_id=upload_image.id)
+
         else:
             # フォームが無効な場合、エラーを出力
             print(form.errors)
@@ -177,20 +147,3 @@ def cutout_fish(request, image_id=0):
     }
     
     return render(request, 'webtestapp/index.html', params)
-
-# def read_qr_code(image_path):
-#     #画像を読み込む
-#     img = cv2.imread(image_path)
-
-#     #QRコードの検出器を作成
-#     qr_detector = cv2.QRCodeDetector()
-
-#     #QRコードの検出とデコード
-#     data, bbox, _ = qr_detector.detectAndDecode(img)
-
-#     #QRコードが検出された場合
-#     if bbox is not None: 
-#         #データとバウンディングボックスを返す
-#         return data, bbox
-#     else:
-#         return None, None

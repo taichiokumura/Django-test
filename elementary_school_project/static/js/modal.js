@@ -44,10 +44,33 @@ modalBtn.addEventListener('click', function() {
     ModalOpen();
 })
 
-
 function submitForm() {
-    // フォームの送信処理を実行（Ajaxや通常のフォーム送信）
+    // フォームの送信処理を実行
     document.getElementById("imageUploadForm").submit();
+}
+
+function loginWithQRCode() {
+    // ログイン処理を実行
+    $.ajax({
+        type: "POST",
+        url: "{% url 'webapp:login_qr_code' %}", // ここにログイン処理を行うURLを指定
+        data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            // その他のデータをここに追加
+        },
+        success: function(response) {
+            console.log(response); 
+            if (response.success) {
+                alert("ログインに成功しました。学籍番号: " + response.student_id);
+            } else {
+                alert("ログインに失敗しました。");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+            alert("エラーが発生しました: " + error);
+        }
+    });
 }
 
 function closeModal() {
