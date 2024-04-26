@@ -9,7 +9,6 @@ header {
 }
 
 h1 {
-    color: greenyellow;
     font-family: 'Mochiy Pop P One', sans-serif;
     margin: 0 auto;
     width: 1000px;
@@ -21,15 +20,10 @@ h1 {
     width: 60%;
     height: 100px;
     margin: 0 auto;
-    background-color: aqua;
 }
 
 #uploadForm input[type="file"] {
     display: none;
-}
-
-#imageUploadForm {
-    
 }
 
 #imageUpload-wrap {
@@ -47,7 +41,6 @@ h1 {
     width: 100%;
     padding: 20px 20px;
     color: #fff;
-    background-color: #ffa620;
     cursor: pointer;
     transition: opacity 0.3s ease;
     margin-left: 10%;
@@ -70,7 +63,6 @@ h1 {
     width: 100%;
     padding: 20px 20px;
     color: #fff;
-    background-color: red;
     cursor: pointer;
     transition: opacity 0.3s ease;
 }
