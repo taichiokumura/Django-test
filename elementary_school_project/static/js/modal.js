@@ -33,9 +33,9 @@ function ModalOpen() {
     previewImage.innerHTML = "<img src='" + document.getElementById("preview").src + "' width='50%' height='50%' >";
 
     //説明表示
-    const msg = document.getElementById('msg');
-    const MyTextarea = document.getElementById('my-textarea');
-    msg.innerText = MyTextarea.value;
+    // const msg = document.getElementById('msg');
+    // const MyTextarea = document.getElementById('my-textarea');
+    // msg.innerText = MyTextarea.value;
 
     // モーダルを表示
     document.getElementById("myModal").style.display = "block";
@@ -44,34 +44,51 @@ modalBtn.addEventListener('click', function() {
     ModalOpen();
 })
 
-function submitForm() {
-    // フォームの送信処理を実行
-    document.getElementById("imageUploadForm").submit();
-}
+// 画像選択ボタンにイベントリスナーを追加
+document.getElementById("upload_btn").addEventListener("click", function() {
+    // フォーム要素とフォームデータを取得
+    var form = document.getElementById("imageUploadForm");
+    var formData = new FormData(form);
 
-function loginWithQRCode() {
-    // ログイン処理を実行
-    $.ajax({
-        type: "POST",
-        url: "{% url 'webapp:login_qr_code' %}", // ここにログイン処理を行うURLを指定
-        data: {
-            'csrfmiddlewaretoken': '{{ csrf_token }}',
-            // その他のデータをここに追加
-        },
-        success: function(response) {
-            console.log(response); 
+    // ファイルが選択されているかを確認
+    const fileInput = document.getElementById('id_photo');
+    const file = fileInput.files[0];
+    if (!file) {
+        alert('ファイルを選択してください。');
+        return;
+    }
+
+    console.log('ファイルが送信されました:', file);
+
+    // XMLHttpRequestを使用してフォームを非同期で送信
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', form.action, true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log('リクエストが成功しました')
+            var response = JSON.parse(xhr.responseText);
             if (response.success) {
-                alert("ログインに成功しました。学籍番号: " + response.student_id);
+                // ログイン成功時の処理
+                console.log('ログイン成功：', response.student_id);
+                
             } else {
-                alert("ログインに失敗しました。");
+                // ログイン失敗時の処理
+                console.log('ログイン失敗:', response.error_message);
+                // エラーメッセージをアラートで表示
+                alert('ログインに失敗しました。' + response.error_message);
             }
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-            alert("エラーが発生しました: " + error);
+        } else {
+            // エラー時の処理
+            // console.log('エラーが発生しました');
+            // // エラーメッセージをアラートで表示
+            // alert('エラーが発生しました。');
+            console.log('リクエストが失敗しました')
         }
-    });
-}
+    };
+    // フォームデータを送信
+    xhr.send(formData);
+});
+
 
 function closeModal() {
     myModal.style.display = 'none';

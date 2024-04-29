@@ -45,20 +45,6 @@
               </div>
           </div>
 
-          <!-- チェックボックス川魚種類 -->
-          <div class="fish-checkbox">
-            <h3>魚の種類を選ぶ</h3>
-            <div class="radio-wrap">
-              {{ upload_form.fish }}
-            </div>
-          </div>
-
-          <div class="explanation-wrap">
-            <label><h4>説明</h4></label>
-            {{ upload_form.explanation|attr:"id:my-textarea" }}
-            
-          </div>
-
         </div>
 
 
@@ -75,7 +61,7 @@
         <div id="modalContent"></div>
         <div id="imagePreview"></div>
         <p id="msg"></p>
-        <button onclick="submitForm()">アップロード</button>
+        <button id="upload_btn">アップロード</button>
       </div>
     </div>
     

@@ -11,6 +11,8 @@ from PIL import Image
 from webapp.forms import DocumentForm
 from webapp.models import CardInformation
 from .login import login_qr_code
+from django.http import JsonResponse
+
 
 def index(request):
     params = {
@@ -19,22 +21,34 @@ def index(request):
         'id': None,
     }
  
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            upload_image = form.save()
-            params['id'] = upload_image.id
-            
-            error_message = login_qr_code(request, upload_image)
-            # QRコードを使ってログインを試みる
-            if error_message:
-                params['error_message'] = error_message
-                print(error_message)  # ターミナルにエラーメッセージを表示
-                # エラーメッセージを追加した状態で画面を再描画
-                return render(request, 'webtestapp/index.html', params)
+            # フォームから画像取得
+            image_file = request.FILES['photo']
 
-            # アップロードが成功したら、次の画面にリダイレクト
-            return redirect('webtestapp:cutout_fish', image_id=upload_image.id)
+            # ローカル内にファイル保存
+            fs = FileSystemStorage()
+            filename = fs.save(image_file.name, image_file)
+            uploaded_file_path = fs.path(filename)
+            
+            login_result = login_qr_code(request, uploaded_file_path)
+
+            # QRコードを使ってログインを試みる
+            if login_result['success'] == True:
+                card_info = form.save()
+                params['id'] = card_info.id
+
+                context = {'message': 'ログインに成功しました'}
+
+                cutout_fish(request, image_id=card_info.id)
+                
+                return render(request, 'webtestapp/index.html', context)
+            else:
+                params['error_message'] = login_result['error_message']
+                fs.delete(filename)
+                context = {'message': 'ログインに失敗しました'}
+                return render(request, 'webtestapp/home.html', context)
 
         else:
             # フォームが無効な場合、エラーを出力
@@ -138,12 +152,10 @@ def cutout_fish(request, image_id=0):
     else:
         print('切り抜けませんでした')
     
-    params = {
-        'title': '画像の表示',
-        'upload_form': DocumentForm(),
+    success_response = {
+        'success': True,
+        'message': 'ログインと魚の切り抜きが成功しました',
         'id': upload_image.id,
-        'url': upload_image.photo.url,
-        'cutout_url': cutout_url  # 白黒画像のURLを追加
     }
     
-    return render(request, 'webtestapp/index.html', params)
+    return JsonResponse(success_response)

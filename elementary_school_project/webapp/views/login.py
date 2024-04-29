@@ -4,9 +4,9 @@ from django.http import JsonResponse
 from pyzbar.pyzbar import decode
 from webapp.models import StudentInformation
 
-def login_qr_code(request, upload_image):
+def login_qr_code(request, uploaded_file_path):
     # 画像からQRコードを読み取る
-    decode_objects = decode(cv2.imread(upload_image.photo.path))
+    decode_objects = decode(cv2.imread(uploaded_file_path))
 
     if decode_objects:
         # QRコードから読み取った学籍番号
@@ -21,13 +21,14 @@ def login_qr_code(request, upload_image):
             print(f"ログインに成功しました。学籍番号: {decode_student_id}")
 
             # ログイン成功をJSON形式で返す
-            return JsonResponse({'success': True, 'student_id': decode_student_id})
+            return {'success': True, 'student_id': decode_student_id}
         except StudentInformation.DoesNotExist:
             # ログイン失敗をJSON形式で返す
-            return print(f"ログインに失敗しました。")
+            print(f"ログインに失敗しました。")
+            return {'success': False, 'error_message': 'ログインに失敗しました。'}
     else:
         # QRコードが見つからなかった場合はログイン失敗とみなす
-        return print(f"QRコードが見つかりませんでした。")
-
+        print(f"QRコードが見つかりませんでした。")
+        return {'success': False, 'error_message': 'QRコードが見つかりませんでした。'}
 
 
