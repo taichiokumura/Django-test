@@ -61,9 +61,31 @@
         <div id="modalContent"></div>
         <div id="imagePreview"></div>
         <p id="msg"></p>
-        <button id="upload_btn">アップロード</button>
+        <button  onclick="submitForm()" id="upload_btn">アップロード</button>
       </div>
     </div>
+
+    <!-- ログインメッセージの表示 -->
+    {% if login_success %}
+      <div id="login_judge_modal">
+        <div class="modal_container">
+          <p>{{ login_success }}</p>
+          <ul>
+            <li><a href="{% url 'webtestapp:header' %}">次へ</a></li>
+          </ul>
+        </div>
+      </div>
+    {% elif login_failure %}
+      <div id="login_failure_modal">
+        <div class="modal_container">
+          <p>{{ login_failure }}</p>
+          <ul>
+            <li><a href="{% url 'webtestapp:index' %}">戻る</a></li>
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
     
     <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
   </body>

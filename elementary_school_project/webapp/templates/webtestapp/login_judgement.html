@@ -1,26 +1,29 @@
-<!DOCTYPE html>
 {% load static %}
 {% load widget_tweaks %}
 <html lang="ja">
   <head>
     <meta charset="utf-8">
-    <title>ホーム画面</title>
+    <title>テストWebアプリ</title>
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
     
   </head>
   <body>
-    <h1>作成したカード</h1>
+    <header>
+      <h1>{{ title }}</h1>
+    </header>
 
-    <div>
-        <ul>
-            {% for obj in object_list %}
-                <img src="{{ obj.photo.url }}" style="width: 200px; height: 200px;">
-            {% endfor %}
-        </ul>
-    </div>
+    <!-- ログインメッセージの表示 -->
+    {% if context %}
+        <p>{{ context }}</p>
+    {% endif %}
+
+    <!-- 画像の表示 -->
+    <img src="{{ image_url }}" alt="アップロードされた画像">
+    
+    <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
   </body>
 </html>

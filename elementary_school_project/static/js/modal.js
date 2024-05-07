@@ -1,13 +1,21 @@
-document.getElementById("id_photo").addEventListener("change", function () {
-    previewImage(this);
-});
+window.addEventListener('load', function(){
+    const fileInput = document.getElementById("id_photo");
+
+    fileInput.addEventListener("change", function(event) {
+        previewImage(event.target);
+        if(!fileInput){ return false;}
+    })
+})
 
 const modalBtn = document.getElementById('myBtn');
 const close = document.querySelector('.js-modal-close');
 const myModal = document.getElementById('myModal');
 
+// 画像ファイルの読み込みと画像表示
 function previewImage(obj) {
+    // コンピュータに保存されているファイルの内容を非同期に読み取る
     const fileReader = new FileReader();
+    // 画像読み込み完了した時点でイベント発生
     fileReader.onload = function () {
         const imageUrl = fileReader.result;
 
@@ -20,6 +28,7 @@ function previewImage(obj) {
     fileReader.readAsDataURL(obj.files[0]);
 }
 
+// モーダルウィンドウ表示関数
 function ModalOpen() {
     const modalContent = document.getElementById("modalContent");
 
@@ -44,11 +53,9 @@ modalBtn.addEventListener('click', function() {
     ModalOpen();
 })
 
-// 画像選択ボタンにイベントリスナーを追加
-document.getElementById("upload_btn").addEventListener("click", function() {
-    // フォーム要素とフォームデータを取得
-    var form = document.getElementById("imageUploadForm");
-    var formData = new FormData(form);
+// 画像ファイルをバックエンドに送信
+function submitForm() {
+    document.getElementById('imageUploadForm').submit();
 
     // ファイルが選択されているかを確認
     const fileInput = document.getElementById('id_photo');
@@ -59,36 +66,7 @@ document.getElementById("upload_btn").addEventListener("click", function() {
     }
 
     console.log('ファイルが送信されました:', file);
-
-    // XMLHttpRequestを使用してフォームを非同期で送信
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', form.action, true);
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            console.log('リクエストが成功しました')
-            var response = JSON.parse(xhr.responseText);
-            if (response.success) {
-                // ログイン成功時の処理
-                console.log('ログイン成功：', response.student_id);
-                
-            } else {
-                // ログイン失敗時の処理
-                console.log('ログイン失敗:', response.error_message);
-                // エラーメッセージをアラートで表示
-                alert('ログインに失敗しました。' + response.error_message);
-            }
-        } else {
-            // エラー時の処理
-            // console.log('エラーが発生しました');
-            // // エラーメッセージをアラートで表示
-            // alert('エラーが発生しました。');
-            console.log('リクエストが失敗しました')
-        }
-    };
-    // フォームデータを送信
-    xhr.send(formData);
-});
-
+}
 
 function closeModal() {
     myModal.style.display = 'none';

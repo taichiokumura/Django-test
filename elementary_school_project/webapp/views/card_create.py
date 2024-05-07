@@ -13,42 +13,50 @@ from webapp.models import CardInformation
 from .login import login_qr_code
 from django.http import JsonResponse
 
-
 def index(request):
     params = {
         'title': 'カードを作る',
         'upload_form': DocumentForm(),
         'id': None,
+        'login_success': None,
+        'login_failure': None,
     }
  
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            # フォームから画像取得
-            image_file = request.FILES['photo']
+            try:
+                # フォームから画像取得
+                image_file = request.FILES['photo']
 
-            # ローカル内にファイル保存
-            fs = FileSystemStorage()
-            filename = fs.save(image_file.name, image_file)
-            uploaded_file_path = fs.path(filename)
-            
-            login_result = login_qr_code(request, uploaded_file_path)
-
-            # QRコードを使ってログインを試みる
-            if login_result['success'] == True:
-                card_info = form.save()
-                params['id'] = card_info.id
-
-                context = {'message': 'ログインに成功しました'}
-
-                cutout_fish(request, image_id=card_info.id)
+                # ローカル内にファイル保存
+                fs = FileSystemStorage()
+                filename = fs.save(image_file.name, image_file)
+                uploaded_file_path = fs.path(filename)
                 
-                return render(request, 'webtestapp/index.html', context)
-            else:
-                params['error_message'] = login_result['error_message']
-                fs.delete(filename)
-                context = {'message': 'ログインに失敗しました'}
-                return render(request, 'webtestapp/home.html', context)
+                login_result = login_qr_code(request, uploaded_file_path)
+
+                # QRコードを使ってログインを試みる
+                if login_result['success'] == True:
+                    card_info = form.save()
+                    params['id'] = card_info.id
+                    params['image_url'] = card_info.photo.url
+                    
+                    # 魚切り抜きの関数実行
+                    cutout_fish(request, image_id=card_info.id)
+
+                    params['login_success'] = 'ログインと魚の切り抜きに成功しました！'
+                    
+                    return render(request, 'webtestapp/index.html', params)
+                else:
+                    params['error_message'] = login_result['error_message']
+                    fs.delete(filename)
+                    params['login_failure'] = 'ログインに失敗しました'
+                    return render(request, 'webtestapp/index.html', params)
+            except KeyError:
+                params['error_message'] = '画像がアップロードされていません'
+                print(f"Debug: {params['error_message']}")
+                return render(request, 'webtestapp/index.html', params)
 
         else:
             # フォームが無効な場合、エラーを出力
@@ -150,7 +158,7 @@ def cutout_fish(request, image_id=0):
 
             break
     else:
-        print('切り抜けませんでした')
+        print(f"切り抜けませんでした")
     
     success_response = {
         'success': True,
