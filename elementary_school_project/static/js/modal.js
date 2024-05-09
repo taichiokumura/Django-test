@@ -72,3 +72,9 @@ function closeModal() {
     myModal.style.display = 'none';
 }
 close.addEventListener('click', closeModal);
+
+const overlay = document.getElementById('overlay');
+
+overlay.onclick = function() {
+    return false;
+}

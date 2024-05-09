@@ -5,6 +5,7 @@
   <head>
     <meta charset="utf-8">
     <title>テストWebアプリ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +19,9 @@
     </header>
 
     <div id="uploadForm"> 
+      {% if login_success or login_failure %}
+      <div id="overlay"></div>
+      {% endif %}
       <form action="{% url 'webtestapp:index' %}" method="post" enctype="multipart/form-data" id="imageUploadForm">
         <div id="imageUpload-wrap">
           {% csrf_token %}

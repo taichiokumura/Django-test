@@ -10,8 +10,10 @@ from PIL import Image
 
 from webapp.forms import DocumentForm
 from webapp.models import CardInformation
-from .login import login_qr_code
 from django.http import JsonResponse
+
+from .login import login_qr_code
+from .mark_sheet import sheet_upload
 
 def index(request):
     params = {
@@ -44,6 +46,9 @@ def index(request):
                     
                     # 魚切り抜きの関数実行
                     cutout_fish(request, image_id=card_info.id)
+
+                    # マークシートの読み取り関数実行
+                    # sheet_upload(request, uploaded_file_path)
 
                     params['login_success'] = 'ログインと魚の切り抜きに成功しました！'
                     
