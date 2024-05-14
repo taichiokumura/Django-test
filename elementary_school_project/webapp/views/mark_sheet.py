@@ -17,7 +17,7 @@ def sheet_upload(request, uploaded_file_path):
     mark_area['bottom_x']= max(loc[1])
     mark_area['bottom_y']= max(loc[0])
     img = img[mark_area['top_y']:mark_area['bottom_y'],mark_area['top_x']:mark_area['bottom_x']]
-    cv2.imwrite('media/res_sheet.png',img)
+    # cv2.imwrite('media/res_sheet.png',img)
 
     n_col = 3 # 1行あたりのマークの数
     n_row = 2 # マークの行数
@@ -29,7 +29,7 @@ def sheet_upload(request, uploaded_file_path):
     img = cv2.GaussianBlur(img,(5,5),0)
     res, img = cv2.threshold(img, 50, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     img = 255 - img
-    cv2.imwrite('media/sirokuro2.png',img)
+    # cv2.imwrite('media/sirokuro2.png',img)
 
     # 質問ごとの回答の単語リスト
     answers = [

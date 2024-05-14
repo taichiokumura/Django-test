@@ -48,7 +48,7 @@ def index(request):
                     cutout_fish(request, image_id=card_info.id)
 
                     # マークシートの読み取り関数実行
-                    # sheet_upload(request, uploaded_file_path)
+                    sheet_upload(request, uploaded_file_path)
 
                     params['login_success'] = 'ログインと魚の切り抜きに成功しました！'
                     
@@ -160,15 +160,10 @@ def cutout_fish(request, image_id=0):
 
             # 切り出し領域の保存
             cv2.imwrite(cutout_image_path, transparent_img)
+            return {'success': True}
 
-            break
-    else:
-        print(f"切り抜けませんでした")
+        else:
+            print(f"切り抜けませんでした")
+            return {'success': False, 'error_message': '画像が切り抜けませんでした。'}
     
-    success_response = {
-        'success': True,
-        'message': 'ログインと魚の切り抜きが成功しました',
-        'id': upload_image.id,
-    }
     
-    return JsonResponse(success_response)
