@@ -45,14 +45,20 @@ def index(request):
                     params['image_url'] = card_info.photo.url
                     
                     # 魚切り抜きの関数実行
-                    cutout_fish(request, image_id=card_info.id)
-
-                    # マークシートの読み取り関数実行
-                    sheet_upload(request, uploaded_file_path)
-
-                    params['login_success'] = 'ログインと魚の切り抜きに成功しました！'
+                    cutout_fish_result = cutout_fish(request, image_id=card_info.id)
                     
-                    return render(request, 'webtestapp/index.html', params)
+                    # マークシートの読み取り関数実行
+                    sheet_upload_result = sheet_upload(request, uploaded_file_path)
+                    
+                    if cutout_fish_result['success'] == True and sheet_upload_result['success'] == True:
+                        params['login_success'] = 'ログインと魚の切り抜きに成功しました！'
+                        return render(request, 'webtestapp/index.html', params)
+                    else:
+                        fs.delete(filename)
+                        params['login_failure'] = '魚の切り抜きに失敗しました'
+                        return render(request, 'webtestapp/index.html', params)
+                
+                    
                 else:
                     params['error_message'] = login_result['error_message']
                     fs.delete(filename)
@@ -160,6 +166,7 @@ def cutout_fish(request, image_id=0):
 
             # 切り出し領域の保存
             cv2.imwrite(cutout_image_path, transparent_img)
+            print(f"切り抜けました")
             return {'success': True}
 
         else:

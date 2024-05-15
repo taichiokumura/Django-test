@@ -91,7 +91,7 @@ h1 {
     overflow: hidden;
     padding-top: 40%;
     width: 70%;
-    height: auto;
+    height: 300px;
     border: 1px solid;
     margin: 0 auto;
 }
@@ -158,7 +158,22 @@ textarea {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 50%;
+}
+
+.modal-content p {
+    display: block;
+    position: relative;
+    left: 15%;
+}
+
+.modal-content h2 {
+    text-align: center;
+}
+
+.modal-content #imagePreview {
+    text-align: center;
+    
 }
 
 .close {
