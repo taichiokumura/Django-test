@@ -55,6 +55,7 @@ def sheet_upload(request, uploaded_file_path):
         result.append(area_sum > np.median(area_sum) * 2.3)
         print(area_sum)
     # 結果を出力
+    all_success = True
     for x, row_result in enumerate(result):
         marked_answer_indices = np.where(row_result)[0]
         if len(marked_answer_indices) > 0:
@@ -64,13 +65,15 @@ def sheet_upload(request, uploaded_file_path):
             if len(marked_answers) > 1:
                 print(f'Q%d: ' % (x+1) + ' / '.join(marked_answers) + ' ## 複数回答 ##')
                 return {'success': False, 'error_message': 'マークが複数あります。'}
-                
+            
             else:
                 print(f'Q%d: ' % (x+1) + marked_answers[0])
-        
-                return {'success': True, 'success_message': 'マークが認識できました'}
-                
         else:
             # マークがない場合
             print(f'Q%d: ** 未回答 **' % (x+1))
-            return {'success': False, 'error_message': 'マークが見つかりませんでした。'}
+            all_success = False
+    
+    if all_success:
+        return {'success': True, 'success_message': 'すべてのマークが認識されました'}
+    else:
+        return {'success': False, 'error_message': 'マークが見つかりませんでした'}

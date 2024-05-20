@@ -32,14 +32,14 @@ function previewImage(obj) {
 function ModalOpen() {
     const modalContent = document.getElementById("modalContent");
 
-    // // フォームの入力値をモーダルに表示
-    // const contentHTML = "<p>この画像を切り抜きますか？</p>";
+    // フォームの入力値をモーダルに表示
+    const contentHTML = "<p>この画像を切り抜きますか？</p>";
 
-    // modalContent.innerHTML = contentHTML;
+    modalContent.innerHTML = contentHTML;
 
     // プレビュー画像も表示
     const previewImage = document.getElementById("imagePreview");
-    previewImage.innerHTML = "<img src='" + document.getElementById("preview").src + "' width='50%' height='30%'>";
+    previewImage.innerHTML = "<img src='" + document.getElementById("preview").src + "' width='50%' height='50%' >";
 
     //説明表示
     // const msg = document.getElementById('msg');
@@ -73,8 +73,10 @@ function closeModal() {
 }
 close.addEventListener('click', closeModal);
 
+// オーバーレイ要素の取得
 const overlay = document.getElementById('overlay');
 
+// オーバーレイをクリックしても何も起こらないようにする
 overlay.onclick = function() {
     return false;
 }

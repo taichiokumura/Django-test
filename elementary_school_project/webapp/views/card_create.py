@@ -14,6 +14,7 @@ from django.http import JsonResponse
 
 from .login import login_qr_code
 from .mark_sheet import sheet_upload
+from .d_squareonly import square_cut
 
 def index(request):
     params = {
@@ -44,18 +45,25 @@ def index(request):
                     params['id'] = card_info.id
                     params['image_url'] = card_info.photo.url
                     
+                    # ワークシート切り抜きの関数実行
+                    # cutout_result = square_cut(request, uploaded_file_path)
+
                     # 魚切り抜きの関数実行
                     cutout_fish_result = cutout_fish(request, image_id=card_info.id)
                     
                     # マークシートの読み取り関数実行
                     sheet_upload_result = sheet_upload(request, uploaded_file_path)
                     
-                    if cutout_fish_result['success'] == True and sheet_upload_result['success'] == True:
+                    if cutout_fish_result['success'] == True and sheet_upload_result['success']:
                         params['login_success'] = 'ログインと魚の切り抜きに成功しました！'
                         return render(request, 'webtestapp/index.html', params)
                     else:
                         fs.delete(filename)
                         params['login_failure'] = '魚の切り抜きに失敗しました'
+                        if not cutout_fish_result['success']:
+                            params['error_message'] = cutout_fish_result['error_message']
+                        elif not sheet_upload_result['success']:
+                            params['error_message'] = sheet_upload_result['error_message']
                         return render(request, 'webtestapp/index.html', params)
                 
                     
