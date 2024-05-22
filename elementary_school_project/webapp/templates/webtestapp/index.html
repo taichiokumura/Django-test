@@ -71,19 +71,19 @@
     </div>
 
     <!-- ログインメッセージの表示 -->
-    {% if login_success %}
+    {% if work_sheet_success %}
       <div id="login_judge_modal">
         <div class="modal_container">
-          <p>{{ login_success }}</p>
+          <p>{{ work_sheet_success }}</p>
           <ul>
             <li><a href="{% url 'webtestapp:header' %}">次へ</a></li>
           </ul>
         </div>
       </div>
-    {% elif login_failure %}
+    {% elif work_sheet_failure %}
       <div id="login_failure_modal">
         <div class="modal_container">
-          <p>{{ login_failure }}</p>
+          <p>{{ work_sheet_failure }}</p>
           <ul>
             <li><a href="{% url 'webtestapp:index' %}">戻る</a></li>
           </ul>
