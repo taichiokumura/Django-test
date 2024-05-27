@@ -4,14 +4,14 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from datetime import datetime
 
-
 from webapp.forms import DocumentForm
 from webapp.models import CardInformation
 from django.http import JsonResponse
 
-from .login import login_qr_code
-from .mark_sheet import sheet_upload
-from .d_squareonly import square_cut
+from .login import login_qr_code #ログイン処理ファイル
+from .d_squareonly import square_cut #ワークシート切り抜きファイル
+from .d_sheetreader import sheet_reader #マークシート読み取りファイル
+from .d_keystone import correct_keystone#台形補正ファイル
 
 def index(request):
     params = {
@@ -35,8 +35,11 @@ def index(request):
                 fs = FileSystemStorage()
                 filename = fs.save(image_file.name, image_file)
                 uploaded_file_path = fs.path(filename)
+
+                #台形補正
+                corrected_image_path = correct_keystone(uploaded_file_path, filename)
                 
-                login_result = login_qr_code(request, uploaded_file_path)
+                login_result = login_qr_code(request, corrected_image_path)
 
                 # QRコードを使ってログインを試みる
                 if login_result['success'] == True:
@@ -45,36 +48,17 @@ def index(request):
                     params['image_url'] = card_info.photo.url
                     
                     # ワークシート切り抜きの関数実行
-                    cutout_result = square_cut(request, uploaded_file_path)
+                    cutout_result = square_cut(request, corrected_image_path, card_info)
 
-                    # 魚切り抜きの関数実行
-                    # cutout_fish_result = cutout_fish(request, image_id=card_info.id)
-                    
-                    # マークシートの読み取り関数実行
-                    # sheet_upload_result = sheet_upload(request, uploaded_file_path)
-                    
-                    # if cutout_fish_result['success'] == True and sheet_upload_result['success']:
-                    #     params['login_success'] = 'ログインと魚の切り抜きに成功しました！'
-                    #     return render(request, 'webtestapp/index.html', params)
-                    # else:
-                    #     fs.delete(filename)
-                    #     params['login_failure'] = '魚の切り抜きに失敗しました'
-                    #     if not cutout_fish_result['success']:
-                    #         params['error_message'] = cutout_fish_result['error_message']
-                    #     elif not sheet_upload_result['success']:
-                    #         params['error_message'] = sheet_upload_result['error_message']
-                    #     return render(request, 'webtestapp/index.html', params)
+                    #マークシート読み取り関数実行
+                    sheet_reader_result = sheet_reader(request, corrected_image_path)
 
-                    if cutout_result['success'] == True:
-                        params['work_sheet_success'] = 'ワークシートの切り抜きに成功しました'
+                    if cutout_result['success'] == True and sheet_reader_result['success'] == True:
+                        params['work_sheet_success'] = 'ワークシートの切り抜きとマークシート読み取りに成功しました'
                         return render(request, 'webtestapp/index.html', params)
                     else:
                         params['work_sheet_failure'] = 'ワークシートの切り抜きに失敗しました'
                         return render(request, 'webtestapp/index.html', params)
-
-
-                
-                    
                 else:
                     params['error_message'] = login_result['error_message']
                     fs.delete(filename)

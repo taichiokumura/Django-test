@@ -19,8 +19,10 @@ def square_cut(request, uploaded_file_path, card_info):
             (167, 1370, 1247, 1806) #説明欄
         ]
 
-        #出力ディレクトリのパスを
+        #出力ディレクトリのパス
         output_dir = os.path.join(settings.MEDIA_ROOT, 'result_images')
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
 
         # 座標で画像を切り抜いて保存
         for i, (start_x, start_y, end_x, end_y) in enumerate(coordinates):
@@ -28,21 +30,24 @@ def square_cut(request, uploaded_file_path, card_info):
             if cropped_image.size == 0:
                 return  {'success': False, 'error_message': f'座標({start_x}, {start_y}, {end_x}, {end_y})で切り抜きに失敗しました。'}
             
-            output_path = os.path.join(output_dir, f'cropped_image_{i+1}.png')
+            output_filename = f'cropped_image_{i+1}.png'
+            output_path = os.path.join(output_dir, output_filename)
             #画像保存
             output_path_success = cv2.imwrite(output_path, cropped_image)
             if output_path_success:
+                #相対パスに変換
+                relative_path = os.path.join(output_dir, output_filename)
                 # 切り抜いた画像をデータベースに格納
                 if i == 0:
-                    card_info.observation_date_images = output_path
+                    card_info.observation_date_images = relative_path
                 elif i == 1:
-                    card_info.observation_place_images_1 = output_path
+                    card_info.observation_place_images_1 = relative_path
                 elif i == 2:
-                    card_info.observation_place_images_2 = output_path
+                    card_info.observation_place_images_2 = relative_path
                 elif i == 3:
-                    card_info.river_state_images = output_path
+                    card_info.river_state_images = relative_path
                 elif i == 4:
-                    card_info.living_thing_consideration_images = output_path
+                    card_info.living_thing_consideration_images = relative_path
 
                 print(f'画像を保存しました: {output_path}')
             else:
