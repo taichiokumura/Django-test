@@ -39,6 +39,7 @@ def index(request):
                 #台形補正
                 corrected_image_path = correct_keystone(uploaded_file_path, filename)
                 
+                #ログイン処理
                 login_result = login_qr_code(request, corrected_image_path)
 
                 # QRコードを使ってログインを試みる

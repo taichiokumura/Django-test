@@ -31,7 +31,7 @@ def sheet_reader(request, uploaded_file_path):
             # 領域の画素値の合計を求める
             area_sum = np.sum(cb_img)
             # 画素値の合計がしきい値以下かどうかでマークの有無を判定
-            is_marked = area_sum < 255 * w * h * 0.5  # しきい値は調整が必要
+            is_marked = area_sum < 255 * w * h * 0.7  # しきい値は調整が必要
             row_result.append(is_marked)
         result.append(row_result)
 

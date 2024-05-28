@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Touch Image Viewer</title>
+    <style>
+        #container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #image {
+            max-width: 100%;
+            max-height: 100%;
+            touch-action: none;
+            transition: transform 0.2s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <div id="container">
+        <img id="image" src="media/river_sample.jpg" alt="Image">
+    </div>
+    <script>
+        const image = document.getElementById('image');
+        let initialDistance = null;
+        let initialScale = 1;
+        let currentScale = 1;
+        let initialAngle = 0;
+        let currentAngle = 0;
+
+        function handleTouchStart(event) {
+            if (event.touches.length === 2) {
+                const touch1 = event.touches[0];
+                const touch2 = event.touches[1];
+                initialDistance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
+                initialScale = currentScale;
+
+                const centerX = (touch1.clientX + touch2.clientX) / 2;
+                const centerY = (touch1.clientY + touch2.clientY) / 2;
+                const dx = touch1.clientX - centerX;
+                const dy = touch1.clientY - centerY;
+                initialAngle = Math.atan2(dy, dx);
+            }
+        }
+
+        function handleTouchMove(event) {
+            event.preventDefault();
+            if (event.touches.length === 2) {
+                const touch1 = event.touches[0];
+                const touch2 = event.touches[1];
+                const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
+                const scale = distance / initialDistance;
+                currentScale = initialScale * scale;
+
+                const centerX = (touch1.clientX + touch2.clientX) / 2;
+                const centerY = (touch1.clientY + touch2.clientY) / 2;
+                const dx = touch1.clientX - centerX;
+                const dy = touch1.clientY - centerY;
+                const angle = Math.atan2(dy, dx);
+                currentAngle = angle - initialAngle;
+
+                image.style.transform = `scale(${currentScale}) rotate(${currentAngle}rad)`;
+            }
+        }
+
+        function handleTouchEnd(event) {
+            if (event.touches.length < 2) {
+                initialDistance = null;
+            }
+        }
+
+        function handleTouchPosition(event) {
+            const touch = event.touches[0];
+            const rect = image.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const x = (touch.clientX - centerX) / currentScale;
+            const y = (touch.clientY - centerY) / currentScale;
+            const rotatedX = x * Math.cos(-currentAngle) - y * Math.sin(-currentAngle);
+            const rotatedY = x * Math.sin(-currentAngle) + y * Math.cos(-currentAngle);
+
+            console.log(`Touched at (x: ${rotatedX.toFixed(2)}, y: ${rotatedY.toFixed(2)})`);
+
+            const coordinatesDisplay = document.createElement('div');
+            coordinatesDisplay.style.position = 'absolute';
+            coordinatesDisplay.style.top = `${touch.clientY}px`;
+            coordinatesDisplay.style.left = `${touch.clientX}px`;
+            coordinatesDisplay.textContent = `(x: ${rotatedX.toFixed(2)}, y: ${rotatedY.toFixed(2)})`;
+            document.body.appendChild(coordinatesDisplay);
+
+            setTimeout(() => {
+                coordinatesDisplay.remove();
+            }, 2000);
+        }
+
+        image.addEventListener('touchstart', handleTouchStart);
+        image.addEventListener('touchmove', handleTouchMove);
+        image.addEventListener('touchend', handleTouchEnd);
+        image.addEventListener('touchcancel', handleTouchEnd);
+        image.addEventListener('touchstart', handleTouchPosition);
+    </script>
+</body>
+</html>
