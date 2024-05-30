@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/river.css' %}"/>
     <title>川登録画面</title>
 </head>
 <body>
@@ -13,41 +16,27 @@
     </div>
     <p id="message"></p>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const river = document.getElementById('river');
-            const canvas = document.getElementById('river-canvas');
-            const ctx = canvas.getContext('2d');
-            const message = document.getElementById('message');
+    <h2>スライドして選んでね</h2>
+    <div class="slider">
+        <div class="slides">
+          <div class="slide" id="slide-1">
+            <img src="media/river2.jpeg" alt="上流">
+            <p>上流</p>
+          </div>
+          <div class="slide" id="slide-2">
+            <img src="media/river2.jpeg" alt="中流">
+            <p>中流</p>
+          </div>
+          <div class="slide" id="slide-3">
+            <img src="media/river2.jpeg" alt="下流">
+            <p>下流</p>
+          </div>
+        </div>
+        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+      </div>
 
-            river.onload = function () {
-                canvas.width = river.width;
-                canvas.height = river.height;
-                ctx.drawImage(river, 0, 0, river.width, river.height);
-            };
-
-            const regions = [
-                { name: '上流', x: 0, y: 0, width: river.width, height: river.height * 0.33 },
-                { name: '中流', x: 0, y: river.height * 0.33, width: river.width, height: river.height * 0.33 },
-                { name: '下流', x: 0, y: river.height * 0.66, width: river.width, height: river.height * 0.33 },
-            ];
-
-            river.addEventListener('click', function(event) {
-                // なんのメソッド?
-                const rect = river.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-
-                for (const region of regions) {
-                    if (x >= region.x && x <= region.x + region.width &&
-                        y >= region.y && y <= region.y + region.height) {
-                            message.innerText = `${region.name} をクリックしました`;
-                            return;
-                    }
-                }
-                message.innerText = 'クリックされた場所に領域はありません';
-            });
-        });
-    </script>
+    <script type="text/javascript" src="{% static 'js/river.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/river_slider.js' %}"></script>
 </body>
 </html>
