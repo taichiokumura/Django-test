@@ -32,6 +32,7 @@ h1 {
     height: auto;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .file_label {
@@ -39,21 +40,22 @@ h1 {
     font-size: 16px;
     line-height: 1.5;
     text-align: center;
-    width: 100%;
-    padding: 20px 20px;
-    /* color: #fff; */
+    width: 150px;
+    padding: 15px 10px;
+    background-color: #e0e0e0;
+    color: #333;
+    border-radius: 5px;
     cursor: pointer;
-    transition: opacity 0.3s ease;
-    margin-left: 10%;
+    transition: background-color 0.3s ease;
+    margin: 0 auto;
 }
 
-.file__label:hover {
-    opacity: 0.7;
+.file_label:hover {
+    background-color: #bdbdbd;
 }
 
 #uploadForm .right-wrap {
-    padding: 0px 40px;
-    margin-right: 5%;
+    margin-left: 10px;
 }
 
 .button_label {
@@ -61,11 +63,18 @@ h1 {
     font-size: 16px;
     line-height: 1.5;
     text-align: center;
-    width: 100%;
-    padding: 20px 20px;
-    /* color: #fff; */
+    width: 150px;
+    padding: 15px 10px;
+    background-color: #e0e0e0;
+    color: #333;
+    border-radius: 5px;
     cursor: pointer;
-    transition: opacity 0.3s ease;
+    transition: background-color 0.3s ease;
+    margin: 0 auto;
+}
+
+.button_label:hover {
+    background-color: #bdbdbd;
 }
 
 #uploadForm #myBtn {
@@ -75,24 +84,24 @@ h1 {
 /* カード */
 .card {
     width: 100%;
-    height: 500px;
-    /* background-color: #fff; */
+    height: 600px;
     margin: 0 auto;
     margin-top: 10%;
 }
+
 /* カード内 */
 .card-preview {
     padding-top: 5%;
     margin-bottom: 10%;
 }
 
-#preview{
+#preview {
     position: relative;
     overflow: hidden;
-    padding-top: 40%;
-    width: 70%;
-    height: 300px;
-    border: 1px solid;
+    padding-top: 60%;
+    width: 100%;
+    height: 400px;
+    border: 2px solid #333; /* Adjust the border width */
     margin: 0 auto;
 }
 
@@ -109,7 +118,6 @@ h1 {
     transform: translate(-50%,-50%);
     width: 100%;
     height: 100%;
-
 }
 
 /* チェックボックス魚種類 */
@@ -159,76 +167,78 @@ textarea {
     padding: 20px;
     border: 1px solid #888;
     width: 50%;
-}
-
-.modal-content p {
-    display: block;
-    position: relative;
-    left: 15%;
-}
-
-.modal-content h2 {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     text-align: center;
 }
 
-.modal-content #imagePreview {
-    text-align: center;
-    
+.modal-content h2, .modal-content p, .modal-content #imagePreview, .modal-content button {
+    margin: 10px 0;
 }
 
-.close {
+.modal-content #imagePreview img {
+    max-width: 100%;
+    height: auto;
+}
+
+.modal-close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 /* ログイン判定モーダルウィンドウ(成功の場合) */
 #login_judge_modal {
     position: fixed;
-    background-color: rgba(255, 255, 255, 0.50);
+    background-color: rgba(255, 255, 255, 0.90);
     z-index: 1;
-    left: 35%;
-    top: 300px;
-    width: 600px;
-    height: 400px;
-    overflow: auto;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -40%);
+    width: 80%;
+    max-width: 600px;
+    height: auto;
+    padding: 20px;
+    overflow: hidden;
     border-radius: 1rem;
-    margin: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .modal_container {
-    position: relative;
-    top: 60px;
-    width: 400px;
-    height: 200px;
-    margin: 0 auto;
+    text-align: center;
+    top: 0; /* この値を調整して文字の位置を上に */
 }
 
 .modal_container p {
     font-weight: bold;
     font-size: 25px;
-    text-align: center;
 }
 
 #login_judge_modal ul {
-    padding-left: 0;
-    padding-top: 40px;
+    list-style: none;
+    padding: 0;
 }
 
 #login_judge_modal li {
-    list-style: none;
-    text-align: center;
+    margin: 20px 0;
 }
 
 #login_judge_modal a {
     text-decoration: none;
-    text-align: center;
     color: black;
     font-size: 20px;
     font-weight: bold;
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
+#login_judge_modal a:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
 
 /* ログイン判定モーダルウィンドウ(失敗の場合) */
 #login_failure_modal {

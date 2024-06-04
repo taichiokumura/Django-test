@@ -27,7 +27,7 @@
           {% csrf_token %}
           <div>
             <label class="file_label">
-              ファイルを選択
+              写真を撮る
               {{ upload_form.photo }} {# フォーム部品を表示 #}
             </label>
           </div>
@@ -62,7 +62,7 @@
       <div class="modal-content">
         <div class="modal-close js-modal-close">&times;</div>
         <h2>確認画面</h2>
-        <p>この画像を切り抜きますか</p>
+        <p>この画像で良いですか</p>
         <div id="modalContent"></div>
         <div id="imagePreview"></div>
         {% comment %} <p id="msg"></p> {% endcomment %}

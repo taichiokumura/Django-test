@@ -55,7 +55,7 @@ def index(request):
                     sheet_reader_result = sheet_reader(request, corrected_image_path)
 
                     if cutout_result['success'] == True and sheet_reader_result['success'] == True:
-                        params['work_sheet_success'] = 'ワークシートの切り抜きとマークシート読み取りに成功しました'
+                        params['work_sheet_success'] = 'カードの作成が出来たよ'
                         return render(request, 'webtestapp/index.html', params)
                     else:
                         params['work_sheet_failure'] = 'ワークシートの切り抜きに失敗しました'

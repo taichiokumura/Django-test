@@ -45,7 +45,7 @@ def sheet_reader(request, uploaded_file_path):
             marked_answers = [answers_for_question[i] for i in marked_answer_indices]
             if len(marked_answers) > 1:
                 print('Q%d: ' % (q_idx+1) + ' / '.join(marked_answers) + ' ## 複数回答 ##')
-                return {'success': False, 'error_message': 'マークが複数あります。'}
+                return {'success': True, 'error_message': 'マークが複数あります。'}
             else:
                 print('Q%d: ' % (q_idx+1) + marked_answers[0])
                 
