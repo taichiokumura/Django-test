@@ -9,3 +9,20 @@ function moveSlide(step) {
 
     slides.style.transform = `translateX(${offset}%)`;
 }
+
+//スライドにクリックイベントを追加して遷移する
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.slide img').forEach((image, index) => {
+        image.addEventListener('click', () => {
+            let location = '';
+            if (index == 0) {
+                location = 'upstream';
+            } else if (index == 1) {
+                location = 'midstream';
+            } else if (index == 2) {
+                location = 'downstream';
+            }
+            window.location.href = `/map/${location}/`;
+        });
+    });
+});

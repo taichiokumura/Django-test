@@ -9,34 +9,32 @@
     <title>川登録画面</title>
 </head>
 <body>
-    <h1>{{ title }}</h1>
-    <div id="river-container">
-        <img src="media/river.jpeg" id="river" alt="川の画像">
-        <canvas id="river-canvas" style="display: none;"></canvas>
-    </div>
-    <p id="message"></p>
-
-    <h2>スライドして選んでね</h2>
+    <h2>{{ title }}</h2>
     <div class="slider">
         <div class="slides">
           <div class="slide" id="slide-1">
-            <img src="media/river2.jpeg" alt="上流">
-            <p>上流</p>
+            <a href="{% url 'webtestapp:map' 'upstream' %}">
+              <img src="{% static 'media/river2.jpeg' %}" alt="上流">
+              <p>上流</p>
+            </a>
           </div>
           <div class="slide" id="slide-2">
-            <img src="media/river2.jpeg" alt="中流">
-            <p>中流</p>
+            <a href="{% url 'webtestapp:map' 'midstream' %}">
+              <img src="{% static 'media/river2.jpeg' %}" alt="中流">
+              <p>中流</p>
+            </a>
           </div>
           <div class="slide" id="slide-3">
-            <img src="media/river2.jpeg" alt="下流">
-            <p>下流</p>
+            <a href="{% url 'webtestapp:map' 'downstream' %}">
+              <img src="{% static 'media/river2.jpeg' %}" alt="下流">
+              <p>下流</p>
+            </a>
           </div>
         </div>
         <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
         <button class="next" onclick="moveSlide(1)">&#10095;</button>
       </div>
 
-    <script type="text/javascript" src="{% static 'js/river.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/river_slider.js' %}"></script>
 </body>
 </html>

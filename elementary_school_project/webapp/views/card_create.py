@@ -56,6 +56,13 @@ def index(request):
 
                     if cutout_result['success'] == True and sheet_reader_result['success'] == True:
                         params['work_sheet_success'] = 'カードの作成が出来たよ'
+
+                        #画像のパスをセッションに保存
+                        request.session['corrected_image_path'] = corrected_image_path
+
+                        # デバッグ用にセッションデータをコンソールに出力
+                        print(f"Debug: session 'corrected_image_path' set to: {corrected_image_path}")
+
                         return render(request, 'webtestapp/index.html', params)
                     else:
                         params['work_sheet_failure'] = 'ワークシートの切り抜きに失敗しました'

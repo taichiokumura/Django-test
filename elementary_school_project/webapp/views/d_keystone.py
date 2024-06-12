@@ -50,7 +50,7 @@ def get_contour(org_img, img, filename):
     approx_contour = cv2.approxPolyDP(max_contour, epsilon, closed=True)
 
     cv2.drawContours(contours_img, [approx_contour], -1, (0,255,0), 30)
-    cv2.imwrite(os.path.join(output_dir, f"approx_contour_{filename}.png"), contours_img)
+    cv2.imwrite(os.path.join(output_dir, f"approx_contour_{os.path.splitext(filename)[0]}.png"), contours_img)
 
     return approx_contour
 
@@ -71,7 +71,7 @@ def get_plate_img(contour, org_img, filename):
     psp_matrix = cv2.getPerspectiveTransform(perspective_base, perspective)
     img_psp = cv2.warpPerspective(org_img, psp_matrix, (1414,2000))  # A4用紙のサイズに合わせて調整します
 
-    output_path = os.path.join(output_dir, f"keystone_corrected_{filename}.png")
+    output_path = os.path.join(output_dir, f"keystone_corrected_{os.path.splitext(filename)[0]}.png")
     cv2.imwrite(output_path, img_psp)
 
     return output_path
@@ -82,13 +82,3 @@ def correct_keystone(image_path, filename):
     corrected_image_path = get_plate_img(contour, org_img, filename)
 
     return corrected_image_path
-
-# # 輪郭検出
-# contour = get_contour(org_img, closing)
-
-# # 台形補正
-# psp_erode_img = get_plate_img(contour, org_img)
-
-
-# # 画像を保存
-# cv2.imwrite("image/d_keystoneout.png", psp_erode_img)
