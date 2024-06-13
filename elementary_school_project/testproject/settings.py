@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webapp.apps.WebappConfig',
     'widget_tweaks',  # 追加
-    'sslserver',
 ]
 
 MIDDLEWARE = [

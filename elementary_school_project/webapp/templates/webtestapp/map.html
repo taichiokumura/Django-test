@@ -14,6 +14,9 @@
         <img id="baseImage" class="image" src="{% static 'media/river_sample.jpg' %}" alt="Base Image">
         <img id="overlayImage" class="image" src="{{ image_url }}" alt="Overlay Image">
     </div>
+
+    <button id="saveButton">この位置に決める</button>
+
     <script>
         const baseImage = document.getElementById('baseImage');
         const overlayImage = document.getElementById('overlayImage');
@@ -44,6 +47,8 @@
                 const y = touch.clientY - centerY;
 
                 overlayImage.style.transform = `translate(${x}px, ${y}px)`;
+                currentX = x;
+                currentY = y;
                 }
             }
 
@@ -105,6 +110,20 @@
 
             overlayImage.addEventListener('touchstart', (event) => handleTouchStart(event, overlayImage));
             overlayImage.addEventListener('touchstart', (event) => handleTouchPosition(event, overlayImage));
+
+            saveButton.addEventListener('click', () => {
+                fetch('/save_position/', {
+                    method: 'POST',
+                    headers: {
+                        'Context-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({x: currentX, y: currentY })
+                }).then(response => response.json())
+                  .then(data => {
+                    console.log('Position saved:', data);
+                  });
+            });
     </script>
 </body>
 </html>

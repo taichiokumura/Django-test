@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-import os
 from django.conf import settings
+from django.http import JsonResponse
+import json
+import os
 
 def river_view(request):
     params = {
@@ -22,6 +24,8 @@ def map_view(request, location):
 
     #セッションから画像パスを取得
     image_url = request.session.get('corrected_image_path', '')
+    image_x = request.session.get('image_x', 0)
+    image_y = request.session.get('image_y', 0)
 
     #デバッグ用にセッションデータをコンソールに出力
     print(f"Debug: session 'corrected_image_path': {image_url}")
@@ -33,7 +37,17 @@ def map_view(request, location):
     
     params = {
         'title': title,
-        'image_url': image_url
+        'image_url': image_url,
+        'image_x': image_x,
+        'image_y': image_y,
     }
     
     return render(request, 'webtestapp/map.html', params)
+
+def save_position(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        request.session['image_x'] = data.get('x', 0)
+        request.session['image_y'] = data.get('y', 0)
+        return JsonResponse({'status': 'success'})
+    return JSonResponse({'status': 'failure'}, status=400)
