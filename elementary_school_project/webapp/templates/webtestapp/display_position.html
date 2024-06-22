@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Display</title>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/determine_position.css' %}">
+</head>
+<body>
+    <h1>位置決定された画像</h1>
+    <div id="container">
+        <img id="baseImage" class="image" src="{% static 'media/river_sample.jpg' %}" alt="Base Image">
+        {% for position in positions %}
+            <img class="overlayImage" src="{{ position.image_url }}" alt="Overlay Image"
+                 data-x="{{ position.x }}" data-y="{{ position.y }}">
+        {% endfor %}
+    </div>
+
+    <script>
+        window.onload = function() {
+            const baseImage = document.getElementById('baseImage');
+            const overlayImages = document.querySelectorAll('.overlayImage');
+
+            // baseImageの中央を取得
+            const baseRect = baseImage.getBoundingClientRect();
+            const baseCenterX = baseRect.width / 2;
+            const baseCenterY = baseRect.height / 2;
+
+            console.log('Base Center - x:', baseCenterX, 'y:', baseCenterY);
+
+            overlayImages.forEach(function (overlayImage) {
+                const x = parseFloat(overlayImage.getAttribute('data-x'));
+                const y = parseFloat(overlayImage.getAttribute('data-y'));
+
+                console.log('Initial Position - x:', x, 'y:', y);
+
+                // overlayImageの初期位置をbaseImageの中央に設定
+                overlayImage.style.position = 'absolute';
+                overlayImage.style.left = `${baseCenterX - overlayImage.width / 2}px`;
+                overlayImage.style.top = `${baseCenterY - overlayImage.height / 2}px`;
+
+                // オフセットを適用
+                overlayImage.style.transform = `translate(${x}px, ${y}px)`;
+
+                // 位置が正しく適用されたかどうかを確認
+                console.log('Overlay Image Position - left:', overlayImage.style.left, 'top:', overlayImage.style.top);
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

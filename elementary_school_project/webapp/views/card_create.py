@@ -5,7 +5,7 @@ from django.conf import settings
 from datetime import datetime
 
 from webapp.forms import DocumentForm
-from webapp.models import CardInformation
+from webapp.models import CardInformation, StudentInformation
 from django.http import JsonResponse
 
 from .login import login_qr_code #ログイン処理ファイル
@@ -44,7 +44,15 @@ def index(request):
 
                 # QRコードを使ってログインを試みる
                 if login_result['success'] == True:
-                    card_info = form.save()
+                    # 学生情報をセッションから取得
+                    student_id = request.session.get('student_id')
+                    student = StudentInformation.objects.get(student_id=student_id)
+
+                    # `CardInformation` オブジェクトを作成して保存
+                    card_info = form.save(commit=False)
+                    card_info.student = student
+                    card_info.save()
+                    
                     params['id'] = card_info.id
                     params['image_url'] = card_info.photo.url
                     

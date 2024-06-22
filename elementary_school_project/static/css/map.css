@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: visible;
     position: relative;
 }
 .image {
@@ -15,6 +15,8 @@
     position: absolute;
 }
 #overlayImage {
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    object-fit: cover;
 }

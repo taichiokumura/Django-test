@@ -13,6 +13,7 @@ urlpatterns = [
     path('river_registration', river_registration.river_view, name='river'),
     path('map/<str:location>/', river_registration.map_view, name='map'),
     path('save_position/', river_registration.save_position, name='save_position'),
+    path('display_position/', river_registration.display_position, name='display_position'),
     # path('cutout_fish/<int:image_id>/', card_create.cutout_fish, name='cutout_fish'),
     # path('home', login.login_card, name='login'),
 ]

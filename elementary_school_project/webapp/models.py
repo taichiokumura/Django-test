@@ -13,3 +13,12 @@ class CardInformation(models.Model):
     river_state_images = models.ImageField(upload_to='result_images/', default='SOME STRING', max_length=500)
     living_thing_consideration_images =models.ImageField(upload_to='result_images/', default='SOME STRING', max_length=500)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+class ImagePosition(models.Model):
+    student = models.ForeignKey(StudentInformation, on_delete=models.CASCADE, null=True)
+    image_url = models.CharField(max_length=255)
+    x = models.FloatField()
+    y = models.FloatField()
+
+    def __str__(self):
+        return f"{self.student} {self.image_url} ({self.x}, {self.y})"
