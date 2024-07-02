@@ -68,8 +68,12 @@ def index(request):
                         #画像のパスをセッションに保存
                         request.session['corrected_image_path'] = corrected_image_path
 
+                        # CardInformationのunique_idをセッションに保存
+                        request.session['unique_id'] = card_info.unique_id
+
                         # デバッグ用にセッションデータをコンソールに出力
                         print(f"Debug: session 'corrected_image_path' set to: {corrected_image_path}")
+                        print(f"Debug: session 'unique_id' set to: {request.session['unique_id']}")
 
                         return render(request, 'webtestapp/index.html', params)
                     else:
