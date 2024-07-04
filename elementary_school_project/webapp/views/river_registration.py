@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from webapp.models import ImagePosition
 from webapp.models import StudentInformation
 from webapp.models import CardInformation
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 import json
 import os
 
@@ -24,6 +26,9 @@ def map_view(request, location):
         title = '中流マップ'
     elif location == 'downstream':
         title = '下流マップ'
+
+    #セッションに川の位置を保存
+    request.session['location'] = location
 
     #セッションから画像パスを取得
     image_url = request.session.get('corrected_image_path', '')
@@ -67,6 +72,7 @@ def save_position(request):
             image_url = request.session.get('corrected_image_path', '')
             student_id = request.session.get('student_id', '') #学生IDをセッションから取得
             card_info_unique_id = request.session.get('unique_id', None) # CardInformationのunique_idをセッションから取得
+            river_location = request.session.get('location', '') # 川の位置をセッションから取得
 
             if not image_url:
                 raise ValueError("Image URL is missing in the session")
@@ -77,6 +83,9 @@ def save_position(request):
             if not card_info_unique_id:
                 raise ValueError("Card information ID is missing")
             
+            if not river_location:
+                raise ValueError("River location is missing in the session")
+
             #学生情報をデータベースから取得
             student = StudentInformation.objects.get_or_create(student_id=student_id)[0]
 
@@ -89,7 +98,8 @@ def save_position(request):
                 card_info_unique_id=card_info_unique_id, 
                 image_url=image_url, 
                 x=x, 
-                y=y
+                y=y,
+                river_location=river_location,
             )
 
             #jsonファイルに書き込む
@@ -97,22 +107,35 @@ def save_position(request):
                 'image_url': image_url,
                 'x': x,
                 'y': y,
-                'unique_id': card_info_unique_id
+                'unique_id': card_info_unique_id,
+                'location': river_location,
             }
 
             json_file_path = os.path.join(settings.MEDIA_ROOT, 'positions.json')
             with open(json_file_path, 'w') as json_file:
                 json.dump(json_data, json_file)
 
-            return JsonResponse({'status': 'success'})
+            return JsonResponse({'status': 'success', 'location': river_location})
         except Exception as e:
             return JsonResponse({'status': 'failure', 'error': str(e)}, status=500)
     return JsonResponse({'status': 'failure'}, status=400)
 
-def display_position(request):
+def save_position_and_redirect(request):
+    response = save_position(request)
+    if response.status_code == 200:
+        response_data = json.loads(response.content)
+        if response_data['status'] == 'success':
+            location = response_data['location']
+            return HttpResponseRedirect(reverse('webtestapp:display_position', args=[location]))
+    return response
+
+def display_position(request, location):
     try:
         # 最新のデータを取得
-        positions = ImagePosition.objects.all()
+        # positions = ImagePosition.objects.all()
+
+        # 最新のデータを取得
+        positions = ImagePosition.objects.filter(river_location=location)
 
         params_list = []
         for position in positions:
@@ -133,11 +156,16 @@ def display_position(request):
                 'y': position.y,
                 'student_id': student_id,
                 'card_info_unique_id': position.card_info_unique_id,
+                'river_location': position.river_location,
             })
 
-        print(f"Debug: x={position.x}, y={position.y}, image_url={image_url}")
+        # デバッグ情報の出力はループの外に移動
+        if positions:
+            first_position = positions[0]
+            print(f"Debug: x={first_position.x}, y={first_position.y}, image_url={first_position.image_url}")
+        # print(f"Debug: x={position.x}, y={position.y}, image_url={image_url}")
 
-        return render(request, 'webtestapp/display_position.html', {'positions': params_list})
+        return render(request, 'webtestapp/display_position.html', {'positions': params_list, 'river_location': location})
     except Exception as e:
         return HttpResponse(f"Error loading position: {str(e)}", status=500)
     

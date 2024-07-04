@@ -23,6 +23,7 @@ class ImagePosition(models.Model):
     student = models.ForeignKey(StudentInformation, on_delete=models.CASCADE, null=True)
     card_info_unique_id = models.CharField(max_length=50, null=True)
     image_url = models.CharField(max_length=255)
+    river_location = models.CharField(max_length=50, null=True)
     x = models.FloatField()
     y = models.FloatField()
 

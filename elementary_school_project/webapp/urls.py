@@ -13,6 +13,7 @@ urlpatterns = [
     path('river_registration', river_registration.river_view, name='river'),
     path('map/<str:location>/', river_registration.map_view, name='map'),
     path('save_position/', river_registration.save_position, name='save_position'),
-    path('display_position/', river_registration.display_position, name='display_position'),
+    path('save_position_and_redirect/', river_registration.save_position_and_redirect, name='save_position_and_redirect'), 
+    path('display_position/<str:location>/', river_registration.display_position, name='display_position'),
     path('get_card_info/<str:card_info_unique_id>/', river_registration.get_card_info, name='get_card_info'),
 ]

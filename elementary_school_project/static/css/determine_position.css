@@ -22,7 +22,7 @@
 
 /* modal.css */
 .modal {
-    display: none; /* Hidden by default */
+    display: block; /* Always block to allow for transitions */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     right: -100%; /* Start outside of the view on the right */
@@ -36,16 +36,15 @@
 }
 
 .modal.show {
-    display: block;
     right: 0; /* Slide in to the view */
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: white;
     margin: 0; /* No margin needed */
     padding: 20px;
     border: 1px solid #888;
-    height: 100%; /* Full height of the modal */
+    height: auto; /* Full height of the modal */
 }
 
 .modal img {
@@ -66,4 +65,8 @@
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+#cardInfoContent img {
+    background-color: white !important;
 }

@@ -183,7 +183,8 @@
                 if (data.status === 'failure') {
                     console.error('Position save failed:', data.error);
                 } else {
-                    window.location.href = '/display_position/'
+                    const location = data.location;
+                    window.location.href = '/display_position/' + location
                     console.log('Position saved successfully');
                 }
             })

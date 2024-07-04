@@ -10,6 +10,17 @@
 </head>
 <body>
     <h1>位置決定された画像</h1>
+    <h2>
+        {% if river_location == "upstream" %}
+            上流
+        {% elif river_location == "midstream" %}
+            中流
+        {% elif river_location == "downstream" %}
+            下流
+        {% else %}
+            ???
+        {% endif %}
+    </h2>
     <div id="container">
         <img id="baseImage" class="image" src="{% static 'media/river_sample.jpg' %}" alt="Base Image">
         {% for position in positions %}
@@ -86,10 +97,15 @@
                             data.data.forEach(card => {
                                 const cardHtml =  `
                                     <img src="${card.photo}" alt="Card Photo">
+                                    <p>観察日</p>
                                     <img src="${card.observation_date_images}" alt="Observation Date Images">
+                                    <p>観察した場所１</p>
                                     <img src="${card.observation_place_images_1}" alt="Observation Place Images 1">
+                                    <p>観察した場所２</p>
                                     <img src="${card.observation_place_images_2}" alt="Observation Place Images 2">
+                                    <p>生き物や川の様子の絵</p>
                                     <img src="${card.river_state_images}" alt="River State Images">
+                                    <p>考察</p>
                                     <img src="${card.living_thing_consideration_images}" alt="Living Thing Consideration Images">
                                 `;
                                 cardInfoContent.insertAdjacentHTML('beforeend', cardHtml);
