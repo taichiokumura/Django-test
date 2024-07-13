@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from datetime import datetime
+import tempfile
+import os
 
 from webapp.forms import DocumentForm
 from webapp.models import CardInformation, StudentInformation
@@ -31,13 +33,26 @@ def index(request):
                 # フォームから画像取得
                 image_file = request.FILES['photo']
 
+                temp_dir = tempfile.gettempdir()
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg', dir=temp_dir) as temp_file:
+                    for chunk in image_file.chunks():
+                        temp_file.write(chunk)
+                    uploaded_file_path = temp_file.name
+                
+                # file confirmation
+                if not os.path.exists(uploaded_file_path):
+                    error_message = 'Failed to create temporary file'
+                    print(f"Debug: {error_message} - Path: {uploaded_file_path}")
+                    params['error_message'] = error_message
+                    return render(request, 'webtestapp/index.html', params)
+
                 # ローカル内にファイル保存
-                fs = FileSystemStorage()
-                filename = fs.save(image_file.name, image_file)
-                uploaded_file_path = fs.path(filename)
+                # fs = FileSystemStorage()
+                # filename = fs.save(image_file.name, image_file)
+                # uploaded_file_path = fs.path(filename)
 
                 #台形補正
-                corrected_image_path = correct_keystone(uploaded_file_path, filename)
+                corrected_image_path = correct_keystone(uploaded_file_path, os.path.basename(uploaded_file_path))
                 
                 #ログイン処理
                 login_result = login_qr_code(request, corrected_image_path)
@@ -81,7 +96,8 @@ def index(request):
                         return render(request, 'webtestapp/index.html', params)
                 else:
                     params['error_message'] = login_result['error_message']
-                    fs.delete(filename)
+                    if os.path.exists(uploaded_file_path):
+                        os.remove(uploaded_file_path)
                     params['login_failure'] = 'ログインに失敗しました'
                     return render(request, 'webtestapp/index.html', params)
             except KeyError:
