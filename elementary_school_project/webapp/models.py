@@ -29,6 +29,11 @@ class ImagePosition(models.Model):
 
     def __str__(self):
         return f"{self.student} {self.unique_id} {self.image_url} ({self.x}, {self.y})"
+    
+class AquaticLifeEncyclopedia(models.Model):
+    name = models.CharField(max_length=100)
+    model_file = models.FileField(upload_to='models/', blank=True, null=True) #3DモデルのURL
+    discovered = models.BooleanField(default=False) #発見されたかどうか
 
 
 

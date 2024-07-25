@@ -3,11 +3,13 @@ from .views import card_create
 from .views import home
 from .views import card_info
 from .views import river_registration
+from .views import aquatic_life_discovery
 
 app_name = 'webtestapp'
 
 urlpatterns = [
     path('', home.home_header, name='header'),
+    path('aquatic_life_encyclopedia/', aquatic_life_discovery.aquatic_discovery_view, name='aquatic_life'),
     path('card_view', card_info.CardListView, name='card'),
     path('cutout_fish', card_create.index, name='index'),
     path('river_registration', river_registration.river_view, name='river'),

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquatic Life Discovery</title>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aquatic_life_encyclopedia.css' %}">
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <div class="aquatic-title">
+        <h1>水生生物を検索する</h1>
+    </div>
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.name.label_tag }}
+            {{ form.name }}
+            <button type="submit">検索</button>
+        </form>
+    </div>
+
+    {% if discovered %}
+        <!-- <h2>水生生物を見つけたよ！</h2> -->
+        <div id="modelViewer" style="width: 400px; height: 400px;"></div>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
+         -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+        <script>
+            // シーンの作成
+            const scene = new THREE.Scene();
+
+            // カメラの作成
+            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            camera.position.z = 5;
+
+            // レンダラーの作成
+            const renderer = new THREE.WebGLRenderer();
+            //renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(300, 300);
+            document.getElementById('modelViewer').appendChild(renderer.domElement);
+
+            // 環境光の追加
+            const light = new THREE.AmbientLight(0xffffff); // ソフトホワイトライト
+            scene.add(light);
+
+            let model;
+
+            // GLTFモデルの読み込み
+            const loader = new THREE.GLTFLoader();
+            loader.load(
+                '{{ model_url }}', // ここにGLTFファイルのパスを指定
+                function (gltf) {
+                    model = gltf.scene;
+                    // モデルのスケーリング
+                    model.scale.set(100, 100, 100); // スケール値を調整
+                    
+                    // モデルをシーンに追加
+                    scene.add(model);
+                    
+                    // アニメーションの開始
+                    animate();
+                },
+                undefined,
+                function (error) {
+                    console.error(error);
+                }
+            );
+
+            // アニメーションループ
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // モデルが存在する場合に回転
+                if (model) {
+                    model.rotation.y += 0.01; // Y軸を中心に回転
+                }
+
+                renderer.render(scene, camera);
+            }
+            </script>
+        {% else %}
+            <div class="placeholder">?</div>
+            {% if form.errors %}
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <p>{{ form.errors.name }}</p>
+                    </div>
+                </div>
+                <script>
+                    var modal = document.getElementById("myModal")
+                    var span = document.getElementsByClassName("close")[0];
+
+                    modal.style.display = "block";
+
+                    span.onclick = function() {
+                        modal.style.display = "none";
+                    }
+
+                    window.onclick = function(event) {
+                        if(event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                </script>
+            {% endif %}
+        {% endif %}
+        <div class="searched-results">
+            <h2>検索された水生生物</h2>
+            <ul>
+                {% for item in searched_life %}
+                    <li>{{ item.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+</body>
+</html>
