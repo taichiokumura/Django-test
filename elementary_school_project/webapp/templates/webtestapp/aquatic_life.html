@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load custom_filters %}
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -7,10 +8,8 @@
     <title>Aquatic Life Discovery</title>
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" href="{% static 'css/aquatic_life_encyclopedia.css' %}">
-    <style>
-        body { margin: 0; }
-        canvas { display: block; }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
     <div class="aquatic-title">
@@ -25,101 +24,111 @@
         </form>
     </div>
 
-    {% if discovered %}
-        <!-- <h2>水生生物を見つけたよ！</h2> -->
-        <div id="modelViewer" style="width: 400px; height: 400px;"></div>
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
-         -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-        <script>
-            // シーンの作成
-            const scene = new THREE.Scene();
+    <div class="model-container">
+        {% for i in max_items|range_filter %}
+            <div id="modelViewer{{ i }}">
+                {% if i < searched_life|length %}
+                    <script>
+                        console.log("Loading model:", '{{ searched_life|get_item:i|get_item:"model_url" }}');
+                        // シーンの作成
+                        const scene{{ i }} = new THREE.Scene();
 
-            // カメラの作成
-            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-            camera.position.z = 5;
+                        // カメラの作成
+                        const camera{{ i }} = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+                        camera{{ i }}.position.z = 5;
 
-            // レンダラーの作成
-            const renderer = new THREE.WebGLRenderer();
-            //renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setSize(300, 300);
-            document.getElementById('modelViewer').appendChild(renderer.domElement);
+                        // レンダラーの作成
+                        const renderer{{ i }} = new THREE.WebGLRenderer();
+                        renderer{{ i }}.setSize(300, 300);
+                        document.getElementById('modelViewer{{ i }}').appendChild(renderer{{ i }}.domElement);
 
-            // 環境光の追加
-            const light = new THREE.AmbientLight(0xffffff); // ソフトホワイトライト
-            scene.add(light);
+                        // 環境光の追加
+                        const light{{ i }} = new THREE.AmbientLight(0xffffff); // ソフトホワイトライト
+                        scene{{ i }}.add(light{{ i }});
 
-            let model;
+                        let model{{ i }};
 
-            // GLTFモデルの読み込み
-            const loader = new THREE.GLTFLoader();
-            loader.load(
-                '{{ model_url }}', // ここにGLTFファイルのパスを指定
-                function (gltf) {
-                    model = gltf.scene;
-                    // モデルのスケーリング
-                    model.scale.set(100, 100, 100); // スケール値を調整
-                    
-                    // モデルをシーンに追加
-                    scene.add(model);
-                    
-                    // アニメーションの開始
-                    animate();
-                },
-                undefined,
-                function (error) {
-                    console.error(error);
-                }
-            );
+                        // GLTFモデルの読み込み
+                        const loader{{ i }} = new THREE.GLTFLoader();
+                        loader{{ i }}.load(
+                            '{{ searched_life|get_item:i|get_item:"model_url" }}', // ここにGLTFファイルのパスを指定
+                            function (gltf) {
+                                model{{ i }} = gltf.scene;
+                                // モデルのスケーリング
+                                model{{ i }}.scale.set(100, 100, 100); // スケール値を調整
 
-            // アニメーションループ
-            function animate() {
-                requestAnimationFrame(animate);
+                                // モデルをシーンに追加
+                                scene{{ i }}.add(model{{ i }});
 
-                // モデルが存在する場合に回転
-                if (model) {
-                    model.rotation.y += 0.01; // Y軸を中心に回転
-                }
+                                // アニメーションの開始
+                                animate{{ i }}();
+                            },
+                            undefined,
+                            function (error) {
+                                console.error(error);
+                            }
+                        );
 
-                renderer.render(scene, camera);
-            }
-            </script>
-        {% else %}
-            <div class="placeholder">?</div>
-            {% if form.errors %}
-                <div id="myModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <p>{{ form.errors.name }}</p>
-                    </div>
-                </div>
-                <script>
-                    var modal = document.getElementById("myModal")
-                    var span = document.getElementsByClassName("close")[0];
+                        // アニメーションループ
+                        function animate{{ i }}() {
+                            requestAnimationFrame(animate{{ i }});
 
-                    modal.style.display = "block";
+                            // モデルが存在する場合に回転
+                            if (model{{ i }}) {
+                                model{{ i }}.rotation.y += 0.01; // Y軸を中心に回転
+                            }
 
-                    span.onclick = function() {
-                        modal.style.display = "none";
-                    }
-
-                    window.onclick = function(event) {
-                        if(event.target == modal) {
-                            modal.style.display = "none";
+                            renderer{{ i }}.render(scene{{ i }}, camera{{ i }});
                         }
-                    }
-                </script>
-            {% endif %}
-        {% endif %}
-        <div class="searched-results">
-            <h2>検索された水生生物</h2>
-            <ul>
-                {% for item in searched_life %}
-                    <li>{{ item.name }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+                    </script>
+                {% else %}
+                    <div class="placeholder">?</div>
+                    {% if form.errors %}
+                        <div id="myModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close">&times;</span>
+                                <p>{{ form.errors.name }}</p>
+                            </div>
+                        </div>
+                        <script>
+                            var modal = document.getElementById("myModal")
+                            var span = document.getElementsByClassName("close")[0];
+
+                            modal.style.display = "block";
+
+                            span.onclick = function() {
+                                modal.style.display = "none";
+                            }
+
+                            window.onclick = function(event) {
+                                if(event.target == modal) {
+                                    modal.style.display = "none";
+                                }
+                            }
+                        </script>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="searched-results">
+        <h2>検索された水生生物</h2>
+        <ul>
+            {% for item in searched_life %}
+                <li>{{ item.name }}</li>
+            {% endfor %}
+        </ul>
+        <form action="{% url 'webtestapp:reset_searched_life' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">リセット</button>
+        </form>
+    </div>
 </body>
 </html>
+
+
+
+
+
+

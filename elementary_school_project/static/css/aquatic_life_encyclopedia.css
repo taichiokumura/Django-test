@@ -3,7 +3,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 20%;
+    min-height: 20vh;
     flex-direction: column;
 }
 
@@ -55,6 +55,29 @@ canvas {
     color: gray;
     border: 2px dashed gray;
     border-radius: 10px;
+    /* margin: 20px; */
+}
+
+.model-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.model-viewer {
+    width: 300px;
+    height: 300px;
+    display: inline-block;
+}
+
+.searched-results {
+    width: 100%;
+    height: auto;
 }
 
 .modal {
@@ -68,6 +91,7 @@ canvas {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
 }
+
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
@@ -77,15 +101,63 @@ canvas {
     max-width: 500px;
     text-align: center;
 }
+
 .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
+
 .close:hover,
 .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+/* iPad Air (820px x 1180px) */
+@media (min-width: 820px) and (max-width: 1180px) {
+    body {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    canvas {
+        display: block;
+    }
+
+    .aquatic-title h1{
+        font-size: 40px;
+    }
+
+    .form-container form input[type="text"] {
+        font-size: 18px;
+        padding: 8px;
+    }
+
+    .form-container form button {
+        font-size: 18px;
+        padding: 8px 16px;
+    }
+
+    .model-container {
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .model-viewer, .placeholder {
+        width: 300px;
+        height: 300px;
+    }
+
+    .modal-content {
+        width: 70%;
+    }
+
+    .searched-results {
+        width: 100%;
+        height: auto;
+        text-align: center;
+    }
 }

@@ -1,23 +1,133 @@
+body {
+    font-family: 'Noto Serif JP', serif;
+}
+
 header {
     width: 60%;
     height: auto;
     margin-top: 30px;
     margin: 0 auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
+}
+
+header h1 {
+    font-size: 50px;
 }
 
 .header-ul {
     display: flex;
-    margin-left: auto;
+    flex-direction: column;
+    margin-top: 20px;
 }
 
-.header-ul li{
+.header-ul li {
     list-style: none;
-    padding-left: 25px;
+    margin: 10px 0;
+    position: relative; /* 指画像を相対的に配置 */
 }
 
 .header-ul a {
     text-decoration: none;
     color: #000000;
+    font-size: 30px;
+}
+
+.character-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    opacity: 0; /* 初期状態で非表示 */
+    transition: opacity 1s ease-in-out; /* フェードイン/アウトのトランジション */
+}
+
+.character-container.visible {
+    opacity: 1; /* アニメーションで表示 */
+}
+
+.character {
+    width: 250px;
+    height: auto;
+}
+
+.finger {
+    width: 30px;
+    height: auto;
+    position: absolute;
+    left: 100%; /* liの右端に配置 */
+    top: 50%;
+    transform: translateY(-50%);
+    display: none; 
+    animation: blink 3s infinite; /* 点滅アニメーション */
+}
+
+@keyframes blink {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: 0;
+    }
+}
+
+.speech-bubble {
+    position: absolute;
+    top: -50px;
+    left: 270px;
+    width: 300px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 10px;
+    border: 2px solid #000;
+    font-size: 18px;
+    font-weight: bold;
+    display: none; /* 初期状態で非表示 */
+}
+
+.speech-bubble.visible {
+    display: block; /* アニメーションで表示 */
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 30px;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: #fff;
+    border-bottom: 0;
+    border-left: 0;
+    margin-left: -10px;
+    margin-bottom: -20px;
+}
+
+.arrow {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 24px;
+    text-decoration: none;
+    color: #007BFF;
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+.typing {
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    border-right: 3px solid;
+    animation: typing 2s steps(30, end), blink-caret .75s step-end infinite;
 }

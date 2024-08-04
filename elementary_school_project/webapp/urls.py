@@ -18,4 +18,6 @@ urlpatterns = [
     path('save_position_and_redirect/', river_registration.save_position_and_redirect, name='save_position_and_redirect'), 
     path('display_position/<str:location>/', river_registration.display_position, name='display_position'),
     path('get_card_info/<str:card_info_unique_id>/', river_registration.get_card_info, name='get_card_info'),
+    path('reset/', aquatic_life_discovery.reset_searched_life, name='reset_searched_life'),
+    path('aquatic_life_discovery/', aquatic_life_discovery.aquatic_discovery_view, name='aquatic_discovery_view'),
 ]
