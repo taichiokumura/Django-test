@@ -9,6 +9,8 @@ app_name = 'webtestapp'
 
 urlpatterns = [
     path('', home.home_header, name='header'),
+    path('start-tutorial/', home.start_tutorial, name='start_tutorial'),
+    path('skip-tutorial/', home.skip_tutorial, name='skip_tutorial'),
     path('aquatic_life_encyclopedia/', aquatic_life_discovery.aquatic_discovery_view, name='aquatic_life'),
     path('card_view', card_info.CardListView, name='card'),
     path('cutout_fish', card_create.index, name='index'),

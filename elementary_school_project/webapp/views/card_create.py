@@ -1,13 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from datetime import datetime
-
 from webapp.forms import DocumentForm
 from webapp.models import CardInformation, StudentInformation
-from django.http import JsonResponse
-
 from .login import login_qr_code #ログイン処理ファイル
 from .d_squareonly import square_cut #ワークシート切り抜きファイル
 from .d_sheetreader import sheet_reader #マークシート読み取りファイル
@@ -22,8 +19,9 @@ def index(request):
         'login_failure': None,
         'work_sheet_success': None,
         'work_sheet_failure': None,
+        'show_tutorial': request.session.get('show_tutorial', False) # チュートリアル表示の判定
     }
- 
+
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -36,14 +34,14 @@ def index(request):
                 filename = fs.save(image_file.name, image_file)
                 uploaded_file_path = fs.path(filename)
 
-                #台形補正
+                # 台形補正
                 corrected_image_path = correct_keystone(uploaded_file_path, filename)
-                
-                #ログイン処理
+
+                # ログイン処理
                 login_result = login_qr_code(request, corrected_image_path)
 
                 # QRコードを使ってログインを試みる
-                if login_result['success'] == True:
+                if login_result['success']:
                     # 学生情報をセッションから取得
                     student_id = request.session.get('student_id')
                     student = StudentInformation.objects.get(student_id=student_id)
@@ -52,20 +50,20 @@ def index(request):
                     card_info = form.save(commit=False)
                     card_info.student = student
                     card_info.save()
-                    
+
                     params['id'] = card_info.id
                     params['image_url'] = card_info.photo.url
-                    
+
                     # ワークシート切り抜きの関数実行
                     cutout_result = square_cut(request, corrected_image_path, card_info)
 
-                    #マークシート読み取り関数実行
+                    # マークシート読み取り関数実行
                     sheet_reader_result = sheet_reader(request, corrected_image_path)
 
-                    if cutout_result['success'] == True and sheet_reader_result['success'] == True:
+                    if cutout_result['success'] and sheet_reader_result['success']:
                         params['work_sheet_success'] = 'カードの作成が出来たよ'
 
-                        #画像のパスをセッションに保存
+                        # 画像のパスをセッションに保存
                         request.session['corrected_image_path'] = corrected_image_path
 
                         # CardInformationのunique_idをセッションに保存
@@ -92,7 +90,10 @@ def index(request):
         else:
             # フォームが無効な場合、エラーを出力
             print(form.errors)
-            
+
     return render(request, 'webtestapp/index.html', params)
+
+
+
     
     

@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse, NoReverseMatch
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def home_header(request):
     try:
@@ -18,3 +20,14 @@ def home_header(request):
     }
 
     return render(request, 'webtestapp/home.html', params)
+
+def start_tutorial(request):
+    request.session['show_tutorial'] = True
+    request.session['skip_tutorial'] = False
+    return JsonResponse({'status': 'started'})
+
+def skip_tutorial(request):
+    request.session['show_tutorial'] = False
+    request.session['skip_tutorial'] = True
+    return JsonResponse({'status': 'skipped'})
+

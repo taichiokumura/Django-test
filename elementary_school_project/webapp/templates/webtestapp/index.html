@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 <html lang="ja">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>テストWebアプリ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,87 +11,122 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
-    
-  </head>
-  <body>
+</head>
+<body>
     <header>
-      <h1>{{ title }}</h1>
+        <h1>{{ title }}</h1>
     </header>
 
-    <div id="uploadForm"> 
-      {% if login_success or login_failure %}
-      <div id="overlay"></div>
-      {% endif %}
-      <form action="{% url 'webtestapp:index' %}" method="post" enctype="multipart/form-data" id="imageUploadForm">
-        <div id="imageUpload-wrap">
-          {% csrf_token %}
-          <div>
-            <label class="file_label">
-              写真を撮る
-              {{ upload_form.photo }} {# フォーム部品を表示 #}
-            </label>
-          </div>
-          
-          <div class="right-wrap">   
-            <label class="button_label">
-              とうこう
-              <input type="button" value="アップロード" id="myBtn">
-            </label>
-          </div>
+    {% if show_tutorial %}
+    <div class="character-container" id="character-container">
+        <img src="{% static 'media/mushitori_boy.png' %}" alt="キャラクター" class="character">
+        <div class="speech-bubble" id="speech-bubble">
+            <span id="speech-text"></span>
         </div>
-
-        <!-- カード -->
-        <div class="card">
-          <!-- 写真表示 -->
-          <div class="card-preview">
-              <div id="preview">
-                <p>写真</p>
-              </div>
-          </div>
-
-        </div>
-
-
-      </form>
     </div>
+    {% endif %}
 
-    <!-- カード内の魚の種類タグつけ -->
+    <div id="uploadForm"> 
+        {% if login_success or login_failure %}
+        <div id="overlay"></div>
+        {% endif %}
+        <form action="{% url 'webtestapp:index' %}" method="post" enctype="multipart/form-data" id="imageUploadForm">
+            <div id="imageUpload-wrap">
+                {% csrf_token %}
+                <div>
+                    <label class="file_label">
+                        写真を撮る
+                        {{ upload_form.photo }} {# フォーム部品を表示 #}
+                    </label>
+                </div>
+
+                <div class="right-wrap">   
+                    <label class="button_label">
+                        とうこう
+                        <input type="button" value="アップロード" id="myBtn">
+                    </label>
+                </div>
+            </div>
+
+            <!-- カード -->
+            <div class="card">
+                <!-- 写真表示 -->
+                <div class="card-preview">
+                    <div id="preview">
+                        <p>写真</p>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
 
     <!-- モーダルウィンドウ -->
     <div id="myModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-close js-modal-close">&times;</div>
-        <h2>確認画面</h2>
-        <p>この画像で良いですか</p>
-        <div id="modalContent"></div>
-        <div id="imagePreview"></div>
-        {% comment %} <p id="msg"></p> {% endcomment %}
-        <button  onclick="submitForm()" id="upload_btn">アップロード</button>
-      </div>
+        <div class="modal-content">
+            <div class="modal-close js-modal-close">&times;</div>
+            <h2>確認画面</h2>
+            <p>この画像で良いですか</p>
+            <div id="modalContent"></div>
+            <div id="imagePreview"></div>
+            <button onclick="submitForm()" id="upload_btn">アップロード</button>
+        </div>
     </div>
 
     <!-- ログインメッセージの表示 -->
     {% if work_sheet_success %}
-      <div id="login_judge_modal">
+    <div id="login_judge_modal">
         <div class="modal_container">
-          <p>{{ work_sheet_success }}</p>
-          <ul>
-            <li><a href="{% url 'webtestapp:river' %}">次へ</a></li>
-          </ul>
+            <p>{{ work_sheet_success }}</p>
+            <ul>
+                <li><a href="{% url 'webtestapp:river' %}">次へ</a></li>
+            </ul>
         </div>
-      </div>
+    </div>
     {% elif work_sheet_failure %}
-      <div id="login_failure_modal">
+    <div id="login_failure_modal">
         <div class="modal_container">
-          <p>{{ work_sheet_failure }}</p>
-          <ul>
-            <li><a href="{% url 'webtestapp:index' %}">戻る</a></li>
-          </ul>
+            <p>{{ work_sheet_failure }}</p>
+            <ul>
+                <li><a href="{% url 'webtestapp:index' %}">戻る</a></li>
+            </ul>
         </div>
-      </div>
+    </div>
     {% endif %}
 
-    
     <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
-  </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if ("{{ show_tutorial }}") {
+                const characterContainer = document.getElementById('character-container');
+                const speechBubble = document.getElementById('speech-bubble');
+                const speechText = document.getElementById('speech-text');
+                const text = 'カード作成を始めましょう！';
+
+                // キャラクターと吹き出しを表示
+                setTimeout(function() {
+                    characterContainer.classList.add('visible');
+                    speechBubble.classList.add('visible');
+
+                    // 一文字ずつテキストを表示
+                    let index = 0;
+                    const typingInterval = setInterval(function() {
+                        if (index < text.length) {
+                            speechText.innerHTML += text[index++];
+                        } else {
+                            clearInterval(typingInterval);
+
+                            // キャラクターと吹き出しを消す
+                            setTimeout(function() {
+                                characterContainer.classList.remove('visible');
+                                speechBubble.classList.remove('visible');
+                            }, 2000); // テキストが表示されてから2秒後に消す
+                        }
+                    }, 100); // 100ミリ秒ごとに文字を追加
+                }, 1000); // 1秒後にアニメーション開始
+            }
+        });
+    </script>
+</body>
 </html>
+
