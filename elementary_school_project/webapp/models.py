@@ -6,7 +6,12 @@ def generate_unique_id():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=10))
 
 class StudentInformation(models.Model):
+    student_name = models.CharField(max_length=100, null=True)
     student_id = models.CharField(max_length=20, unique=True)
+    year = models.IntegerField(default=2024)
+
+    def __str__(self):
+        return f"{self.student_name} {self.student_id} ({self.year})"
 
 class CardInformation(models.Model):
     student = models.ForeignKey(StudentInformation, on_delete=models.CASCADE, null=True)

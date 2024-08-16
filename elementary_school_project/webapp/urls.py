@@ -4,11 +4,15 @@ from .views import home
 from .views import card_info
 from .views import river_registration
 from .views import aquatic_life_discovery
+from .views import teacher_registration
+from .views import teacher_delete
 
 app_name = 'webtestapp'
 
 urlpatterns = [
     path('', home.home_header, name='header'),
+    path('teacher_registration/', teacher_registration.account_registration, name='account_registration'),
+    path('delete_student/<str:student_id>/', teacher_delete.delete_student, name='delete_student'),
     path('start-tutorial/', home.start_tutorial, name='start_tutorial'),
     path('skip-tutorial/', home.skip_tutorial, name='skip_tutorial'),
     path('aquatic_life_encyclopedia/', aquatic_life_discovery.aquatic_discovery_view, name='aquatic_life'),

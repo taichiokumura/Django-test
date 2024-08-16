@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/registration.css' %}">
+    <title>教員専用登録ページ</title>
+</head>
+<body>
+    <h1>教員専用登録ページ</h1>
+
+    <form method="POST" id="registrationForm">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">登録</button>
+    </form>
+
+    {% if form.errors %}
+        <div>
+            <h2>エラーが発生しました:</h2>
+            <ul>
+                {% for field in form %}x
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <!-- 学生情報テーブル -->
+    <h2>登録された学生情報</h2>
+    <table id="studentTable" border="1">
+        <thead>
+            <tr>
+                <th>名前</th>
+                <th>学生ID</th>
+                <th>年度</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr data-student-id="{{ student.stunet_id }}">
+                <td>{{ student.student_name }}</td>
+                <td>{{ student.student_id }}</td>
+                <td>{{ student.year }}</td>
+                <td>
+                    <button class="delete-button" data-student-id="{{ student.student_id }}">削除</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 登録完了モーダル画面 -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <p>登録が完了しました！</p>
+        </div>
+    </div>
+
+    <!-- 削除モーダル画面 -->
+     <div id="confirmModal">
+        <div class="modal-content">
+            <p>この学生情報を削除しますか？</p>
+            <button id="confirmDelete">はい</button>
+            <button id="cancelDelete">いいえ</button>
+        </div>
+     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const successModal = document.getElementById('successModal');
+            const closeModal = document.getElementById('closeModal');
+            const confirmModal = document.getElementById('confirmModal');
+            const confirmDelete = document.getElementById('confirmDelete');
+            const cancelDelete = document.getElementById('cancelDelete');
+
+            let studentIdToDelete = null;
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();  //フォームのデフォルト送信を防ぐ
+
+                const formData = new FormData(form);
+
+                fetch("{% url 'webtestapp:account_registration' %}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        successModal.style.display = "block"; // 成功時にのみ表示する
+                    } else if (data.errors) {
+                        alert('エラーが発生しました: ' + JSON.stringify(data.errors));
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            closeModal.addEventListener('click', function() {
+                successModal.style.display = "none";
+            });
+
+            // モーダルの外側をクリックした場合もモーダルを閉じる
+            window.addEventListener('click', function(event) {
+                if (event.target == successModal) {
+                    successModal.style.display = "none";
+                }
+            });
+
+            // 削除ボタンのクリックイベント
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    studentIdToDelete = this.dataset.studentId;
+                    confirmModal.style.display = "block";
+                });
+            });
+
+            // 確認モーダルで削除を実行
+            confirmDelete.addEventListener('click', function() {
+                const deleteUrl = `{% url 'webtestapp:delete_student' 'STUDENT_ID_PLACEHOLDER' %}`.replace('STUDENT_ID_PLACEHOLDER', studentIdToDelete);
+                fetch(deleteUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.querySelector(`tr[data-student-id="${studentIdToDelete}"]`).remove();
+                        confirmModal.style.display = "none";
+                    } else {
+                        alert('削除に失敗しました。');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            cancelDelete.addEventListener('click', function() {
+                confirmModal.style.display = "none";
+            });
+
+            // モーダルの外側をクリックした場合もモーダルを閉じる
+            window.addEventListener('click', function(event) {
+                if (event.target == confirmModal) {
+                    confirmModal.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
