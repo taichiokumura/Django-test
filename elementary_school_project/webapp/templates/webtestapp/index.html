@@ -17,15 +17,6 @@
         <h1>{{ title }}</h1>
     </header>
 
-    {% if show_tutorial %}
-    <div class="character-container" id="character-container">
-        <img src="{% static 'media/mushitori_boy.png' %}" alt="キャラクター" class="character">
-        <div class="speech-bubble" id="speech-bubble">
-            <span id="speech-text"></span>
-        </div>
-    </div>
-    {% endif %}
-
     <div id="uploadForm"> 
         {% if login_success or login_failure %}
         <div id="overlay"></div>

@@ -66,6 +66,12 @@
      <div id="confirmModal">
         <div class="modal-content">
             <p>この学生情報を削除しますか？</p>
+            <!-- 選択された学生情報の表示 -->
+             <div id="studentInfo">
+                <p><strong>名前：</strong> <span id="studentName"></span></p>
+                <p><strong>学生ID：</strong> <span id="studentId"></span></p>
+                <p><strong>年度：</strong> <span id="studentYear"></span></p>
+             </div>
             <button id="confirmDelete">はい</button>
             <button id="cancelDelete">いいえ</button>
         </div>
@@ -79,6 +85,11 @@
             const confirmModal = document.getElementById('confirmModal');
             const confirmDelete = document.getElementById('confirmDelete');
             const cancelDelete = document.getElementById('cancelDelete');
+
+            // 学生情報を表示する要素
+            const studentNameSpan = document.getElementById('studentName');
+            const studentIdSpan = document.getElementById('studentId');
+            const studentYearSpan = document.getElementById('studentYear');
 
             let studentIdToDelete = null;
 
@@ -120,6 +131,16 @@
             document.querySelectorAll('.delete-button').forEach(button => {
                 button.addEventListener('click', function() {
                     studentIdToDelete = this.dataset.studentId;
+                    const studentRow = this.closest('tr');
+                    const studentName = studentRow.querySelector('td:nth-child(1)').textContent;
+                    const studentId = studentRow.querySelector('td:nth-child(2)').textContent;
+                    const studentYear = studentRow.querySelector('td:nth-child(3)').textContent;
+
+                    // 学生情報をモーダルに表示
+                    studentNameSpan.textContent = studentName;
+                    studentIdSpan.textContent = studentId
+                    studentYearSpan.textContent = studentYear;
+
                     confirmModal.style.display = "block";
                 });
             });

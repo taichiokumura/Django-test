@@ -59,7 +59,6 @@ def map_view(request, location):
 def save_position(request):
     if request.method == 'POST':
         try:
-
             data = json.loads(request.body)
 
             x = data.get('x', 0)
@@ -91,6 +90,8 @@ def save_position(request):
 
             # CardInformationを取得
             card_info = CardInformation.objects.get(unique_id=card_info_unique_id)
+            year = card_info.year
+            print(f"Debug: Saving position for year={year} and location={river_location}")
 
             # データベースに保存
             ImagePosition.objects.create(
@@ -100,6 +101,7 @@ def save_position(request):
                 x=x, 
                 y=y,
                 river_location=river_location,
+                year=year,
             )
 
             #jsonファイルに書き込む
@@ -115,30 +117,64 @@ def save_position(request):
             with open(json_file_path, 'w') as json_file:
                 json.dump(json_data, json_file)
 
-            return JsonResponse({'status': 'success', 'location': river_location})
+            return JsonResponse({'status': 'success', 'location': river_location, 'card_info_unique_id': card_info_unique_id})
         except Exception as e:
             return JsonResponse({'status': 'failure', 'error': str(e)}, status=500)
     return JsonResponse({'status': 'failure'}, status=400)
 
 def save_position_and_redirect(request):
+    print("Debug: Entered save_position_and_redirect function")  # 関数の最初でデバッグ
+    
     response = save_position(request)
+    print(f"Debug: save_position response status code: {response.status_code}")
+     
     if response.status_code == 200:
         response_data = json.loads(response.content)
+        print(f"Debug: Response data: {response_data}")  # レスポンスデータの内容をデバッグ
+        
         if response_data['status'] == 'success':
             location = response_data['location']
-            return HttpResponseRedirect(reverse('webtestapp:display_position', args=[location]))
+            card_info_unique_id = request.session.get('unique_id')
+            
+            # デバッグ: セッション内の値を確認
+            print(f"Debug: card_info_unique_id from session: {request.session.get('unique_id')}")
+            print(f"Debug: card_info_unique_id from response: {card_info_unique_id}")
+            
+            if card_info_unique_id:
+                card_info = CardInformation.objects.get(unique_id=card_info_unique_id)
+                year = card_info.year
+                print(f"Debug: Redirecting to year={year} for location={location}")
+                
+                # セッションの内容を確認
+                print(f"Debug: Session data before redirect: {request.session.items()}")
+                
+                try:
+                    redirect_url = reverse('webtestapp:display_position', args=[location, year])
+                    print(f"Debug: redirect_url = {redirect_url}")
+                except Exception as e:
+                    print(f"Error: Reverse failed with location={location} and year={year}")
+                    raise e
+                    
+                return JsonResponse({'status': 'success', 'redirect_url': redirect_url})
+            else:
+                print(f"Debug: save_position failed with status code: {response.status_code}")
     return response
 
-def display_position(request, location):
+def display_position(request, location, year):
     try:
         # 最新のデータを取得
         # positions = ImagePosition.objects.all()
+        print(f"Debug: Displaying positions for location={location}, year={year}")
 
         # 最新のデータを取得
-        positions = ImagePosition.objects.filter(river_location=location)
+        positions = ImagePosition.objects.filter(river_location=location, year=year)
+        
+        if not positions.exists():
+            print(f"No positions found for year {year} at location {location}")
 
         params_list = []
         for position in positions:
+            print(f"Debug: Found position with x={position.x}, y={position.y}, year={position.year}")
             if position.image_url:  # 修正
                 relative_image_path = os.path.relpath(position.image_url, settings.MEDIA_ROOT).replace('\\', '/')
                 image_url = os.path.join(settings.MEDIA_URL, relative_image_path)
@@ -157,6 +193,7 @@ def display_position(request, location):
                 'student_id': student_id,
                 'card_info_unique_id': position.card_info_unique_id,
                 'river_location': position.river_location,
+                'year': year,
             })
 
         # デバッグ情報の出力はループの外に移動
@@ -165,7 +202,7 @@ def display_position(request, location):
             print(f"Debug: x={first_position.x}, y={first_position.y}, image_url={first_position.image_url}")
         # print(f"Debug: x={position.x}, y={position.y}, image_url={image_url}")
 
-        return render(request, 'webtestapp/display_position.html', {'positions': params_list, 'river_location': location})
+        return render(request, 'webtestapp/display_position.html', {'positions': params_list, 'river_location': location, 'year': year})
     except Exception as e:
         return HttpResponse(f"Error loading position: {str(e)}", status=500)
     
@@ -190,3 +227,7 @@ def get_card_info(request, card_info_unique_id):
         return JsonResponse({'status': 'success', 'data': data})
     except Exception as e:
         return JsonResponse({'status': 'failure', 'error': str(e)}, status=500)
+    
+    def clear_session(request):
+        request.session.flush()
+        return HttpResponse("Session cleared")

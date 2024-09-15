@@ -12,108 +12,72 @@
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="loading-screen" class="loading-screen">
-        <div class="loading-animation">
-            <div class="circle red"></div>
-            <div class="circle green"></div>
-            <div class="circle blue"></div>
-            <div class="circle yellow"></div>
-            <p>ロード中...</p>
-        </div>
-    </div>
-
     <div id="main-content" class="hidden">
-        <div id="tutorial-choice" class="tutorial-choice">
-            <p>チュートリアルを始めますか？</p>
-            <div class="buttons">
-                <button id="start-tutorial">はい</button>
-                <button id="skip-tutorial">いいえ</button>
-            </div>
-        </div>
-
         <header>
             <h1>{{ title }}</h1>
             <ul class="header-ul">
-                <li><a href="#">アプリの使い方</a></li>
-            <li><a href="{{ upstream_url }}">上流</a><img src="{% static 'media/finger.png' %}" alt="指" class="finger" id="finger-1"></li>
-            <li><a href="{{ midstream_url }}">中流</a><img src="{% static 'media/finger.png' %}" alt="指" class="finger" id="finger-2"></li>
-            <li><a href="{{ downstream_url }}">下流</a><img src="{% static 'media/finger.png' %}" alt="指" class="finger" id="finger-3"></li>
-            <li><a href="{% url 'webtestapp:index' %}">カードを作る</a><img src="{% static 'media/finger.png' %}" alt="指" class="finger" id="finger-4"></li>
-            <li><a href="{% url 'webtestapp:aquatic_life' %}">水生生物図鑑</a><img src="{% static 'media/finger.png' %}" alt="指" class="finger" id="finger-5"></li>
+                {% comment %} <li><a href="{{ upstream_url }}">上流</a></li>
+                <li><a href="{{ midstream_url }}">中流</a></li>
+                <li><a href="{{ downstream_url }}">下流</a></li> {% endcomment %}
+                <li><a href="{% url 'webtestapp:index' %}">カードを作る</a></li>
+                <li><a href="{% url 'webtestapp:aquatic_life' %}">水生生物図鑑</a></li>
+
             </ul>
+            {% if position_links %}
+                <h2>マップを選択</h2>
+                <div class="year-map-container">
+                    {% for year, links in position_links.items %}
+                    <div class="year-section">
+                        <button class="accordion">{{ year }}年度</button>
+                        <div class="panel">
+                            <ul>
+                                <li><a href="{{ links.upstream }}">上流</a></li>
+                                <li><a href="{{ links.midstream }}">中流</a></li>
+                                <li><a href="{{ links.downstream }}">下流</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>現在、年度ごとのデータはありません</p>
+            {% endif %}
         </header>
-    
-        <div class="character-container hidden" id="character-container">
-            <img src="{% static 'media/mushitori_boy.png' %}" alt="キャラクター" class="character">
-            <div class="speech-bubble" id="speech-bubble">
-                <span id="speech-text"></span>
-            </div>
-        </div>
+
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ローディングアニメーション
-            const loadingScreen = document.getElementById('loading-screen');
-            const mainContent = document.getElementById('main-content');
+        // document.getElementById('selection-form').addEventListener('submit', function(event) {
+        //     event.preventDefault();
             
-            setTimeout(function() {
-                loadingScreen.style.display = 'none';
-                mainContent.classList.remove('hidden');
-            }, 2000);
-            
+        //     const location = document.getElementById('locationSelect').value;
+        //     const year = document.getElementById('yearSelect').value;
+        
+        //     // 選択された場所と年度に基づいてURLを生成
+        //     const url = `/display_position/${location}/${year}/`;
+        //     window.location.href = url;
+        // });
 
-            const tutorialChoice = document.getElementById('tutorial-choice');
-            const startTutorial = document.getElementById('start-tutorial');
-            const skipTutorial = document.getElementById('skip-tutorial');
-            const characterContainer = document.getElementById('character-container');
-            const speechBubble = document.getElementById('speech-bubble');
-            const speechText = document.getElementById('speech-text');
-            const text = 'こんにちは！まずは、「カードを作る」ページに進んでみよう！';
+        document.addEventListener('DOMContentLoaded', function () {
+            const accordions = document.querySelectorAll('.accordion');
 
-            startTutorial.addEventListener('click', function() {
-                fetch("{% url 'webtestapp:start_tutorial' %}")
-                .then(response => response.json())
-                .then(data => {
-                    tutorialChoice.style.display = 'none';
-                    // キャラクターと吹き出しを表示
-                    characterContainer.classList.remove('hidden');
-                    setTimeout(function() {
-                        characterContainer.classList.add('visible');
-                        speechBubble.classList.add('visible');
+            accordions.forEach(accordion => {
+                accordion.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    const panel = this.nextElementSibling;
 
-                        // 一文字ずつテキストを表示
-                        let index = 0;
-                        const typingInterval = setInterval(function() {
-                            if (index < text.length) {
-                                speechText.innerHTML += text[index++];
-                            } else {
-                                clearInterval(typingInterval);
-
-                                // キャラクターと吹き出しを消す
-                                setTimeout(function() {
-                                    characterContainer.classList.remove('visible');
-                                    speechBubble.classList.remove('visible');
-
-                                    // 指を表示
-                                    setTimeout(function() {
-                                        document.getElementById('finger-4').style.display = 'block';
-                                    }, 1000);
-                                }, 2000); // テキストが表示されてから2秒後に消す
-                            }
-                        }, 100); // 100ミリ秒ごとに文字を追加
-                    }, 1000); // 1秒後にアニメーション開始
-                });
-            });
-
-            skipTutorial.addEventListener('click', function() {
-                fetch("{% url 'webtestapp:skip_tutorial' %}")
-                .then(response => response.json())
-                .then(data => {
-                    tutorialChoice.style.display = 'none';
+                    if (panel.style.maxHeight && panel.style.maxHeight !== "0px") {
+                        panel.style.maxHeight = "0px"; // パネルを閉じる
+                        panel.style.padding = "0 15px"; // 閉じたときのパディングをゼロに
+                    } else {
+                        panel.style.maxHeight = panel.scrollHeight + "px"; // コンテンツの高さに合わせて自動調整
+                        panel.style.padding = "10px 15px"; // 開いたときのパディング
+                    }
                 });
             });
         });
+
+
     </script>
 </body>
 </html>

@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/determine_position.css' %}">
 </head>
 <body>
-    <h1>位置決定された画像</h1>
-    <h2>
+    <h1>{{ year }}年度の
         {% if river_location == "upstream" %}
             上流
         {% elif river_location == "midstream" %}
@@ -18,9 +17,10 @@
         {% elif river_location == "downstream" %}
             下流
         {% else %}
-            ???
+            不明な地域
         {% endif %}
-    </h2>
+        に位置決定された画像
+    </h1>
     <div id="container">
         <img id="baseImage" class="image" src="{% static 'media/river_sample.jpg' %}" alt="Base Image">
         {% for position in positions %}
@@ -117,6 +117,7 @@
                 });
             });
         }
+
     </script>
 </body>
 </html>

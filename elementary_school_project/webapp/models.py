@@ -8,7 +8,7 @@ def generate_unique_id():
 class StudentInformation(models.Model):
     student_name = models.CharField(max_length=100, null=True)
     student_id = models.CharField(max_length=20, unique=True)
-    year = models.IntegerField(default=2024)
+    year = models.IntegerField(default=2024, null=True, blank=True)
 
     def __str__(self):
         return f"{self.student_name} {self.student_id} ({self.year})"
@@ -22,6 +22,7 @@ class CardInformation(models.Model):
     observation_place_images_2 = models.ImageField(upload_to='result_images/', default='SOME STRING', max_length=500)
     river_state_images = models.ImageField(upload_to='result_images/', default='SOME STRING', max_length=500)
     living_thing_consideration_images = models.ImageField(upload_to='result_images/', default='SOME STRING', max_length=500)
+    year = models.IntegerField(default=2024, null=True, blank=True) 
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class ImagePosition(models.Model):
@@ -31,14 +32,16 @@ class ImagePosition(models.Model):
     river_location = models.CharField(max_length=50, null=True)
     x = models.FloatField()
     y = models.FloatField()
+    year = models.IntegerField(default=2024, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.student} {self.unique_id} {self.image_url} ({self.x}, {self.y})"
+        return f"{self.student} {self.unique_id} {self.image_url} ({self.x}, {self.y}) {self.year}"
     
 class AquaticLifeEncyclopedia(models.Model):
     name = models.CharField(max_length=100)
     model_file = models.FileField(upload_to='models/', blank=True, null=True) #3DモデルのURL
     discovered = models.BooleanField(default=False) #発見されたかどうか
+  
 
 
 

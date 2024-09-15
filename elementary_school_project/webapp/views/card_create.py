@@ -49,6 +49,7 @@ def index(request):
                     # `CardInformation` オブジェクトを作成して保存
                     card_info = form.save(commit=False)
                     card_info.student = student
+                    card_info.year = student.year
                     card_info.save()
 
                     params['id'] = card_info.id
@@ -68,10 +69,13 @@ def index(request):
 
                         # CardInformationのunique_idをセッションに保存
                         request.session['unique_id'] = card_info.unique_id
+                        
+                        request.session['year'] = card_info.year
 
                         # デバッグ用にセッションデータをコンソールに出力
                         print(f"Debug: session 'corrected_image_path' set to: {corrected_image_path}")
                         print(f"Debug: session 'unique_id' set to: {request.session['unique_id']}")
+                        print(f"Debug: session 'year' set to: {request.session['year']}")
 
                         return render(request, 'webtestapp/index.html', params)
                     else:
