@@ -9,7 +9,7 @@ class StudentInformation(models.Model):
     name_id = models.CharField(max_length=100, null=True)
     student_id = models.CharField(max_length=20, unique=True)
     year = models.IntegerField(default=2024, null=True, blank=True)
-
+    
     def __str__(self):
         return f"{self.name_id} {self.student_id} ({self.year})"
 
