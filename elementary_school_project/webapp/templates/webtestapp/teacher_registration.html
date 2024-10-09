@@ -35,7 +35,7 @@
     <table id="studentTable" border="1">
         <thead>
             <tr>
-                <th>名前</th>
+                <th>名前ID</th>
                 <th>学生ID</th>
                 <th>年度</th>
             </tr>
@@ -43,7 +43,7 @@
         <tbody>
             {% for student in students %}
             <tr data-student-id="{{ student.stunet_id }}">
-                <td>{{ student.student_name }}</td>
+                <td>{{ student.name_id }}</td>
                 <td>{{ student.student_id }}</td>
                 <td>{{ student.year }}</td>
                 <td>
@@ -68,12 +68,13 @@
             <p>この学生情報を削除しますか？</p>
             <!-- 選択された学生情報の表示 -->
              <div id="studentInfo">
-                <p><strong>名前：</strong> <span id="studentName"></span></p>
+                <p><strong>名前ID：</strong> <span id="studentName"></span></p>
                 <p><strong>学生ID：</strong> <span id="studentId"></span></p>
                 <p><strong>年度：</strong> <span id="studentYear"></span></p>
              </div>
             <button id="confirmDelete">はい</button>
             <button id="cancelDelete">いいえ</button>
+            <div id="deleteMessage"></div>
         </div>
      </div>
 
@@ -90,8 +91,10 @@
             const studentNameSpan = document.getElementById('studentName');
             const studentIdSpan = document.getElementById('studentId');
             const studentYearSpan = document.getElementById('studentYear');
+            const deleteMessage = document.getElementById('deleteMessage');
 
             let studentIdToDelete = null;
+            let studentRowToDelete = null;
 
             form.addEventListener('submit', function(event) {
                 event.preventDefault();  //フォームのデフォルト送信を防ぐ
@@ -131,10 +134,10 @@
             document.querySelectorAll('.delete-button').forEach(button => {
                 button.addEventListener('click', function() {
                     studentIdToDelete = this.dataset.studentId;
-                    const studentRow = this.closest('tr');
-                    const studentName = studentRow.querySelector('td:nth-child(1)').textContent;
-                    const studentId = studentRow.querySelector('td:nth-child(2)').textContent;
-                    const studentYear = studentRow.querySelector('td:nth-child(3)').textContent;
+                    studentRowToDelete = this.closest('tr');
+                    const studentName = studentRowToDelete.querySelector('td:nth-child(1)').textContent;
+                    const studentId = studentRowToDelete.querySelector('td:nth-child(2)').textContent;
+                    const studentYear = studentRowToDelete.querySelector('td:nth-child(3)').textContent;
 
                     // 学生情報をモーダルに表示
                     studentNameSpan.textContent = studentName;
@@ -156,8 +159,17 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        document.querySelector(`tr[data-student-id="${studentIdToDelete}"]`).remove();
-                        confirmModal.style.display = "none";
+                        // 学生情報の行を削除
+                        studentRowToDelete.remove();
+
+                        // 削除完了メッセージ
+                        deleteMessage.textContent = '削除が完了しました';
+
+                        // モーダルを閉じる
+                        setTimeout(() => {
+                            confirmModal.style.display = "none";
+                            deleteMessage.textContent = ''; // メッセージをクリアする
+                        }, 2000); // 2秒後に閉じる
                     } else {
                         alert('削除に失敗しました。');
                     }

@@ -1,11 +1,8 @@
 #container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: visible;
     position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: visible;
 }
 
 .image {
@@ -13,15 +10,38 @@
     max-height: 100%;
     touch-action: none;
     transition: transform 0.2s ease-out;
-    position: absolute;
 }
 
 .overlayImage {
     width: 75px;
     height: 75px;
     border-radius: 50%;
+    position: absolute;
     object-fit: cover;
 }
+
+.home-container {
+    text-align: center;
+    margin-top: 20px; /* 少し余白を追加 */
+}
+
+.home-button {
+    display: inline-block; /* ボタンのように表示 */
+    padding: 10px 20px; /* ボタンの内側に余白を設定 */
+    background-color: #f0f0f0 !important; /* 背景色を薄いグレーに設定 */
+    color: black !important; /* 文字色を黒に設定 */
+    text-decoration: none !important; /* 下線を消す */
+    font-size: 16px; /* 文字のサイズ */
+    border: 2px solid #ccc; /* ボタンの周りに薄い枠線を追加 */
+    border-radius: 5px; /* 角を丸くする */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* ホバー時のエフェクト */
+}
+
+.home-button:hover {
+    background-color: #e0e0e0 !important; /* ホバー時に背景色を少し暗くする */
+    border-color: #888 !important; /* ホバー時にボーダー色を変更 */
+}
+
 
 /* modal.css */
 .modal {

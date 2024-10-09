@@ -20,18 +20,28 @@ header h1 {
     display: flex;
     flex-direction: column;
     margin-top: 20px;
+    
 }
 
 .header-ul li {
     list-style: none;
     margin: 10px 0;
-    position: relative; /* 指画像を相対的に配置 */
 }
 
 .header-ul a {
     text-decoration: none;
     color: #000000;
     font-size: 30px;
+    padding-right: 35px;
+}
+
+.map-title {
+    text-decoration: none; /* 同じように下線なし */
+    color: #000000; /* 文字色を統一 */
+    font-size: 30px; /* フォントサイズを統一 */
+    font-family: 'Noto Serif JP', serif; /* フォントファミリーを統一 */
+    text-align: center; /* タイトルを中央揃え */
+    margin-top: 20px; /* 余白調整 */
 }
 
 .year-map-container {

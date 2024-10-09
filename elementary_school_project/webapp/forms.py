@@ -19,14 +19,14 @@ class AquaticLifeDiscoveryForm(forms.Form):
 class StudentInformationForm(forms.ModelForm):
     class Meta:
         model = StudentInformation
-        fields = ['student_name','student_id','year'] #フォームで入力するフィールド
+        fields = ['name_id','student_id','year'] #フォームで入力するフィールド
         widgets = {
-            'student_name': forms.TextInput(attrs={'placeholder': '名前を入力'}),
+            'name_id': forms.TextInput(attrs={'placeholder': 'IDを入力'}),
             'student_id': forms.TextInput(attrs={'placeholder': '学籍番号を入力'}),
             'year': forms.NumberInput(attrs={'value': 2024}),
         }
         labels = {
-            'student_name': '名前',
+            'name_id': '名前ID',
             'student_id': 'パスワード',
             'year': '年度'
         }

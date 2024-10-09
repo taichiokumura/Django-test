@@ -16,15 +16,11 @@
         <header>
             <h1>{{ title }}</h1>
             <ul class="header-ul">
-                {% comment %} <li><a href="{{ upstream_url }}">上流</a></li>
-                <li><a href="{{ midstream_url }}">中流</a></li>
-                <li><a href="{{ downstream_url }}">下流</a></li> {% endcomment %}
-                <li><a href="{% url 'webtestapp:index' %}">カードを作る</a></li>
+                <p><a href="{% url 'webtestapp:index' %}">カードを作る</a></p>
                 <li><a href="{% url 'webtestapp:aquatic_life' %}">水生生物図鑑</a></li>
-
             </ul>
             {% if position_links %}
-                <h2>マップを選択</h2>
+                <p class="map-title">マップを選択</p>
                 <div class="year-map-container">
                     {% for year, links in position_links.items %}
                     <div class="year-section">
@@ -40,24 +36,12 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <p>現在、年度ごとのデータはありません</p>
+                <p></p>
             {% endif %}
         </header>
-
     </div>
 
     <script>
-        // document.getElementById('selection-form').addEventListener('submit', function(event) {
-        //     event.preventDefault();
-            
-        //     const location = document.getElementById('locationSelect').value;
-        //     const year = document.getElementById('yearSelect').value;
-        
-        //     // 選択された場所と年度に基づいてURLを生成
-        //     const url = `/display_position/${location}/${year}/`;
-        //     window.location.href = url;
-        // });
-
         document.addEventListener('DOMContentLoaded', function () {
             const accordions = document.querySelectorAll('.accordion');
 
@@ -76,13 +60,6 @@
                 });
             });
         });
-
-
     </script>
 </body>
 </html>
-
-
-
-
-
