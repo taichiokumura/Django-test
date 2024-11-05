@@ -12,7 +12,7 @@
     <h1>{{ title }}</h1>
     <div id="container">
         <img id="baseImage" class="image" src="{% static 'media/river_sample.jpg' %}" alt="Base Image">
-        <img id="overlayImage" class="image" src="{{ image_url }}" alt="Overlay Image">
+        <img id="overlayImage" class="image" src="{% static selected_illustration %}" alt="Overlay Image">
     </div>
 
     <button id="saveButton">この位置に決める</button>
@@ -28,7 +28,11 @@
         let currentAngle = 0;
         let currentX = 0;
         let currentY = 0;
-        // const cardInfoId = overlayImage.getAttribute('data-card-info-id'); // 追加
+
+        let initialBaseWidth = baseImage.naturalWidth;
+        let initialBaseHeight = baseImage.naturalHeight;
+        let baseScaleX = baseImage.clientWidth / initialBaseWidth;
+        let baseScaleY = baseImage.clientHeight / initialBaseHeight;
 
         // DjangoのCSRFトークンを取得する関数
         function getCookie(name) {
@@ -37,7 +41,6 @@
                 const cookies = document.cookie.split(';');
                 for (let i = 0; i < cookies.length; i++) {
                     const cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
@@ -66,8 +69,8 @@
                 const rect = baseImage.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
-                const x = touch.clientX - centerX;
-                const y = touch.clientY - centerY;
+                const x = (touch.clientX - centerX) / baseScaleX;
+                const y = (touch.clientY - centerY) / baseScaleY;
 
                 overlayImage.style.transform = `translate(${x}px, ${y}px)`;
                 currentX = x;
@@ -117,7 +120,7 @@
             coordinatesDisplay.style.position = 'absolute';
             coordinatesDisplay.style.top = `${touch.clientY}px`;
             coordinatesDisplay.style.left = `${touch.clientX}px`;
-            coordinatesDisplay.textContent = `(x: ${rotatedX.toFixed(2)}, y: ${rotatedY.toFixed(2)})`;
+            coordinatesDisplay.textContent = `(x: ${rotatedX.toFixed(2)}, y: ${rotatedY.toFixed(2)})`; //画像に座標数値を表示
             document.body.appendChild(coordinatesDisplay);
 
             setTimeout(() => {
@@ -137,8 +140,8 @@
                 const rect = baseImage.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
-                const x = event.clientX - centerX;
-                const y = event.clientY - centerY;
+                const x = (event.clientX - centerX) / baseScaleX;
+                const y = (event.clientY - centerY) / baseScaleY;
 
                 overlayImage.style.transform = `translate(${x}px, ${y}px)`;
                 currentX = x;
@@ -183,13 +186,23 @@
                 if (data.status === 'failure') {
                     console.error('Position save failed:', data.error);
                 } else {
-                    window.location.href = data.redirect_url
+                    window.location.href = data.redirect_url;
                 }
             })
             .catch(error => console.error('Error saving position:', error));
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalIllustrationInputs = document.querySelectorAll('input[name="modal_illustration"]');
+            const mainIllustrationInput = document.querySelector('input[name="illustration"]');
+    
+            modalIllustrationInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    mainIllustrationInput.value = this.value;
+                    console.log(`イラスト ${this.value} が選択されました`);
+                });
+            });
+        });
     </script>
 </body>
 </html>
-
-

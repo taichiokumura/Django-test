@@ -1,0 +1,161 @@
+body {
+    font-family: 'Noto Serif JP', serif;
+}
+
+header {
+    width: 60%;
+    height: auto;
+    margin-top: 30px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 50px;
+}
+
+.header-ul {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    
+}
+
+.header-ul li {
+    list-style: none;
+    margin: 10px 0;
+}
+
+.header-ul a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 30px;
+    padding-right: 35px;
+}
+
+.map-title {
+    text-decoration: none; /* 同じように下線なし */
+    color: #000000; /* 文字色を統一 */
+    font-size: 30px; /* フォントサイズを統一 */
+    font-family: 'Noto Serif JP', serif; /* フォントファミリーを統一 */
+    text-align: center; /* タイトルを中央揃え */
+    margin-top: 20px; /* 余白調整 */
+}
+
+.year-map-container {
+    width: 50%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.year-section {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.accordion {
+    background-color: #ffffff; /* 背景を白に */
+    color: #000000; /* 文字色を黒に */
+    cursor: pointer;
+    padding: 15px;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #ccc; /* ボタンの外枠に薄いグレーの線を追加 */
+    outline: none;
+    font-size: 18px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.accordion:hover {
+    background-color: #f0f0f0; /* ホバー時に少しグレーに */
+    color: #333333; /* 文字色も少しダークに */
+}
+
+.accordion.active {
+    background-color: #e0e0e0; /* アクティブ時にさらに濃いグレーに */
+}
+
+
+.panel {
+    max-height: 0;
+    padding: 0 15px;
+    background-color: white;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+
+.panel.open {
+    max-height: 500px; /* 十分な高さを設定。必要に応じて調整。 */
+    padding: 10px 15px; /* 開いたときのパディング */
+}
+
+.panel ul {
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.panel li {
+    margin: 8px 0;
+}
+
+.panel li a {
+    text-decoration: none;
+    color: #000000; /* 文字色を黒に変更 */
+    font-size: 16px;
+    padding: 8px;
+    display: inline-block;
+    transition: color 0.2s ease;
+}
+
+.panel li a:hover {
+    color: #333333; /* ホバー時に少し濃いグレーに */
+}
+
+.arrow {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 24px;
+    text-decoration: none;
+    color: #000000; /* 文字色を黒に変更 */
+}
+
+.typing {
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    border-right: 3px solid;
+    animation: typing 2s steps(30, end), blink-caret .75s step-end infinite;
+}
+
+@media (min-width: 820px) and (max-width: 1180px) {
+    .tutorial-choice p {
+        font-size: 35px;
+    }
+
+    .tutorial-choice button {
+        font-size: 30px;
+    }
+
+    .character-container {
+        justify-content: flex-end;
+        align-items: flex-end;
+        margin-bottom: 50px;
+    }
+
+    .speech-bubble {
+        top: 0px;
+        left: 80px;
+    }
+
+    #speech-text {
+        font-size: 24px;
+    }
+}

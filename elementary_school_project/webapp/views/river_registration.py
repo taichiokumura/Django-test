@@ -32,6 +32,7 @@ def map_view(request, location):
 
     #セッションから画像パスを取得
     image_url = request.session.get('corrected_image_path', '')
+    illustration_image = request.session.get('selected_illustration', '')
     image_x = request.session.get('image_x', 0)
     image_y = request.session.get('image_y', 0)
     card_info_unique_id = request.session.get('unique_id', '') # CardInformationのunique_idをセッションから取得
@@ -39,6 +40,7 @@ def map_view(request, location):
     #デバッグ用にセッションデータをコンソールに出力
     print(f"Debug: session 'corrected_image_path': {image_url}")
     print(f"Debug: session 'card_info_unique_id': {card_info_unique_id}")
+    print(f"Debug: selected_illustration: {illustration_image}")
 
     if image_url:
         relative_image_path = os.path.relpath(image_url, settings.MEDIA_ROOT).replace('\\', '/')
@@ -49,6 +51,7 @@ def map_view(request, location):
     
     params = {
         'title': title,
+        'selected_illustration': illustration_image,
         'image_url': image_url,
         'image_x': image_x,
         'image_y': image_y,
@@ -72,6 +75,7 @@ def save_position(request):
             student_id = request.session.get('student_id', '') #学生IDをセッションから取得
             card_info_unique_id = request.session.get('unique_id', None) # CardInformationのunique_idをセッションから取得
             river_location = request.session.get('location', '') # 川の位置をセッションから取得
+            illustration_image = request.session.get('selected_illustration', '')
 
             if not image_url:
                 raise ValueError("Image URL is missing in the session")
@@ -102,6 +106,7 @@ def save_position(request):
                 y=y,
                 river_location=river_location,
                 year=year,
+                illustration_image=illustration_image,
             )
 
             #jsonファイルに書き込む
@@ -111,6 +116,7 @@ def save_position(request):
                 'y': y,
                 'unique_id': card_info_unique_id,
                 'location': river_location,
+                'selected_illustration': illustration_image,
             }
 
             json_file_path = os.path.join(settings.MEDIA_ROOT, 'positions.json')
@@ -187,6 +193,7 @@ def display_position(request, location, year):
                 student_id = None
 
             params_list.append({
+                'illustration_image': position.illustration_image,
                 'image_url': image_url,
                 'x': position.x,
                 'y': position.y,

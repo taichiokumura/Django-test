@@ -2,15 +2,20 @@ import numpy as np
 import cv2
 
 def sheet_reader(request, uploaded_file_path):
+    print(f"Debug: Reading image from path: {uploaded_file_path}")
+
     # スキャン画像を読み込む
     img = cv2.imread(uploaded_file_path, 0)
+    if img is None:
+        print(f"Error: Could not read image at {uploaded_file_path}")
+        return {'success': False, 'error_message': '画像の読み込みに失敗しました。'}
 
     # チェックボックスの座標を指定
     checkbox_positions = [
         # Q1のチェックボックス座標 (x, y, width, height)
-        [(186, 438, 19, 18), (309, 438, 19, 18), (433, 438, 19, 18),(556, 438, 19, 18), (651, 438, 19, 18), (765, 438, 19, 18)],
+        [(186, 438, 19, 18), (309, 438, 19, 18), (433, 438, 19, 18), (556, 438, 19, 18), (651, 438, 19, 18), (765, 438, 19, 18)],
         # Q2のチェックボックス座標 (x, y, width, height)
-        [(186, 513, 19, 18), (296, 513, 19, 18), (391, 513, 19, 18),(487, 513, 19, 18)]
+        [(186, 513, 19, 18), (296, 513, 19, 18), (391, 513, 19, 18), (487, 513, 19, 18)]
     ]
 
     # 質問ごとの回答の単語リスト
@@ -44,17 +49,17 @@ def sheet_reader(request, uploaded_file_path):
             answers_for_question = answers[q_idx]
             marked_answers = [answers_for_question[i] for i in marked_answer_indices]
             if len(marked_answers) > 1:
-                print('Q%d: ' % (q_idx+1) + ' / '.join(marked_answers) + ' ## 複数回答 ##')
+                print(f'Q{q_idx + 1}: ' + ' / '.join(marked_answers) + ' ## 複数回答 ##')
                 return {'success': True, 'error_message': 'マークが複数あります。'}
             else:
-                print('Q%d: ' % (q_idx+1) + marked_answers[0])
-                
+                print(f'Q{q_idx + 1}: {marked_answers[0]}')
         else:
             # マークがない場合
-            print('Q%d: ** 未回答 **' % (q_idx+1))
+            print(f'Q{q_idx + 1}: ** 未回答 **')
             all_success = False
-    
+
     if all_success:
         return {'success': True, 'success_message': 'すべてのマークが認識されました'}
     else:
         return {'success': False, 'error_message': 'マークが見つかりませんでした'}
+

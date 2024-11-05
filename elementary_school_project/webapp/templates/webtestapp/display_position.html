@@ -24,7 +24,7 @@
     <div id="container">
         <img id="baseImage" class="image" src="{% static 'media/river_sample.jpg' %}" alt="Base Image">
         {% for position in positions %}
-            <img class="overlayImage" src="{{ position.image_url }}" data-x="{{ position.x }}" data-y="{{ position.y }}" data-card-info-id="{{ position.card_info_unique_id }}">
+            <img class="overlayImage" src="{% static position.illustration_image %}" data-x="{{ position.x }}" data-y="{{ position.y }}" data-card-info-id="{{ position.card_info_unique_id }}">
         {% endfor %}
     </div>
 

@@ -5,10 +5,13 @@ from django.core.exceptions import ValidationError
 import re
 
 class DocumentForm(forms.ModelForm):
+    
+    # マップピンイラスト選択フィールド
+    illustration = forms.CharField(max_length=100, required=False, widget=forms.HiddenInput())
 
     class Meta:
         model = CardInformation
-        fields = ['photo']
+        fields = ['photo', 'illustration']
         widgets = {
             'photo': forms.FileInput(attrs={'capture': 'environment'})
         }

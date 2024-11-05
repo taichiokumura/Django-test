@@ -59,6 +59,28 @@
             <h2>確認画面</h2>
             <p>この画像で良いですか</p>
             <div id="modalContent"></div>
+
+            <!-- イラスト選択UI -->
+            <div>
+                <div>
+                    <label>イラストを再選択</label>
+                    <div class="illustration-options">
+                        <label>
+                            <input type="radio" name="illustration" value="media/kawasemi1.png">
+                            <img src="{% static 'media/kawasemi1.png' %}" alt="イラスト1" class="illustration-thumb">
+                        </label>
+                        <label>
+                            <input type="radio" name="illustration" value="media/kawasemi2.png">
+                            <img src="{% static 'media/kawasemi2.png' %}" alt="イラスト2" class="illustration-thumb">
+                        </label>
+                        <label>
+                            <input type="radio" name="illustration" value="media/kawasemi3.png">
+                            <img src="{% static 'media/kawasemi3.png' %}" alt="イラスト3" class="illustration-thumb">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
             <div id="imagePreview"></div>
             <button onclick="submitForm()" id="upload_btn">アップロード</button>
         </div>
@@ -87,6 +109,21 @@
 
     <script type="text/javascript" src="{% static 'js/modal.js' %}"></script>
     <script>
+        function submitForm() {
+            const form = document.getElementById('imageUploadForm');
+            const selectedIllustration = document.querySelector('input[name="illustration"]:checked');
+            
+            if (selectedIllustration) {
+                const illustrationField = document.createElement('input');
+                illustrationField.type = 'hidden';
+                illustrationField.name = 'illustration';
+                illustrationField.value = selectedIllustration.value;
+                form.appendChild(illustrationField);
+            }
+            
+            form.submit();  // フォームを送信
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             if ("{{ show_tutorial }}") {
                 const characterContainer = document.getElementById('character-container');

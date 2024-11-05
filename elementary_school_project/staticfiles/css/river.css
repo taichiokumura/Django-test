@@ -1,0 +1,89 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f8ff;
+  text-align: center;
+}
+
+header {
+  margin: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.slider {
+  position: relative;
+  max-width: 80%;
+  margin: auto;
+  overflow: hidden;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background-color: #e0f7fa;
+  padding: 20px;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  vertical-align: middle;
+  border-radius: 10px;
+}
+
+.slide p {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.7); /* 背景色を透明度のある黒にして文字を強調 */
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-transform: uppercase; /* 文字を大文字に変換して強調 */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* ホバー時のエフェクト */
+}
+
+.slide p:hover {
+  background-color: rgba(0, 0, 0, 0.9); /* ホバー時に背景を濃くしてアクセントをつける */
+  transform: translateX(-50%) scale(1.05); /* ホバー時に少し拡大して強調 */
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 1.5rem;
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+.prev:hover, .next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}

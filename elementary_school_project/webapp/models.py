@@ -29,13 +29,14 @@ class ImagePosition(models.Model):
     student = models.ForeignKey(StudentInformation, on_delete=models.CASCADE, null=True)
     card_info_unique_id = models.CharField(max_length=50, null=True)
     image_url = models.CharField(max_length=255)
+    illustration_image = models.CharField(max_length=255, null=True, blank=True)
     river_location = models.CharField(max_length=50, null=True)
     x = models.FloatField()
     y = models.FloatField()
     year = models.IntegerField(default=2024, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.student} {self.unique_id} {self.image_url} ({self.x}, {self.y}) {self.year}"
+        return f"{self.student} {self.unique_id} {self.image_url} ({self.x}, {self.y}) {self.year} {self.illustration_image}"
     
 class AquaticLifeEncyclopedia(models.Model):
     name = models.CharField(max_length=100)

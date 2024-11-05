@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +26,8 @@ SECRET_KEY = 'django-insecure-2lv93%l+#d*0ea*37=xmxbdq3b_pnls(rnhyk(clut6*c!hww(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.11.6']
-# ALLOWED_HOSTS = ['172.18.172.48']
+# ALLOWED_HOSTS = ['172.20.10.2']
+# ALLOWED_HOSTS = ['172.18.165.240']
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.11.8']
 
 
@@ -78,20 +79,31 @@ WSGI_APPLICATION = 'testproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'elementary_school_webapp',
-        'USER': 'root',
-        'PASSWORD': 'vdkfan5106',
-        'HOST': 'localhost',
+        'NAME': os.getenv('DATABASE_NAME', 'elementary_school_webapp'),
+        'USER': os.getenv('DATABASE_USER', 'root'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'vdkfan5106'),
+        'HOST': os.getenv('DATABASE_HOST', 'db'),
         'PORT': '3306',
     }
 }
+
+# DATABASES = {
+#     # 'default': {
+#     #     'ENGINE': 'django.db.backends.sqlite3',
+#     #     'NAME': BASE_DIR / 'db.sqlite3',
+#     # }
+
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'elementary_school_webapp',
+#         'USER': 'root',
+#         'PASSWORD': 'vdkfan5106',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 # LOGGING = {
 #     'version': 1,
@@ -152,6 +164,9 @@ STATIC_URL = 'static/'
 # ]
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# collectstatic コマンドで静的ファイルが保存されるディレクトリ
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 
